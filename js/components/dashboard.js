@@ -132,12 +132,12 @@ class Dashboard {
     // Calculate current net worth
     const currentNetWorth = this.calculationsService.calculateNetWorth();
     currentNetWorthEl.textContent =
-      this.calculationsService.formatCurrency(currentNetWorth); // Use standard formatting here
+      this.calculationsService.formatCurrency2(currentNetWorth); // Use standard formatting here
 
     // Calculate projected net worth (1 year)
     const projectedNetWorth = this.calculationsService.getOneYearProjection();
     projectedNetWorthEl.textContent =
-      this.calculationsService.formatCurrency(projectedNetWorth); // Use standard formatting here
+      this.calculationsService.formatCurrency2(projectedNetWorth); // Use standard formatting here
 
     // --- CHANGE BUTTON CONTENT CALCULATION ---
     let buttonText = "0"; // Default text

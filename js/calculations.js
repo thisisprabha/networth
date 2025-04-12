@@ -194,6 +194,27 @@ class CalculationsService {
       return formatter2.format(num);
     }
   }
+
+  formatCurrency3(amount) {
+    if (amount === null || amount === undefined) return "0";
+
+    const num = Number(amount);
+    if (isNaN(num)) return "0";
+
+    const formatter2 = new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    });
+
+    if (num >= 10000000) {
+      return `₹${(num / 10000000).toFixed(1)}Cr`;
+    } else if (num >= 100000) {
+      return `₹${(num / 100000).toFixed(1)}L`;
+    } else {
+      return formatter3.format(num);
+    }
+  }
   /**
    * Calculate growth percentage between two values
    * @param {Number} startValue Starting value

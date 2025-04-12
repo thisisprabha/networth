@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     appContainer.innerHTML = `
       <div class="pin-prompt flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
         <h2 class="text-2xl mb-4">${
-          isNewPin ? "First tine? Set pun" : "Enter 4-Digit PIN"
+          isNewPin ? "First time? Set 4-Digit PIN" : "Enter 4-Digit PIN"
         }</h2>
         <input
           type="password"
