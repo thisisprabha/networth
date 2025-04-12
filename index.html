@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>Net Worth - Private Tracking</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="assets/icon-192x192.png" />
+    <!-- Add Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  </head>
+  <body class="bg-black text-white">
+    <div id="app" class="mx-auto px-4 max-w-md min-h-screen flex flex-col">
+      <!-- Header -->
+      <!-- <header class="py-6">
+        <h1 class="text-3xl font-bold">Your Net Worth</h1>
+      </header> -->
+
+      <!-- Net Worth Summary -->
+      <section id="summary" class="my-4 p-6 bg-gray-900 rounded-xl">
+        <h2 class="text-gray-500 text-center mb-2">My Net Worth</h2>
+        <div class="text-5xl font-bold my-2 text-center">
+          ₹<span id="current-net-worth">0</span>
+          <!-- ₹ rupee was here before -->
+        </div>
+        <div class="mt-4 flex justify-center">
+          <button
+            id="add-asset-btn"
+            class="bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm flex items-center"
+          >
+            ₹<i data-feather="arrow-up" class="h-4 w-4 mr-1"></i>
+            0
+          </button>
+          <!-- ₹ rupee was here before -->
+        </div>
+      </section>
+
+      <!-- Asset Breakdown -->
+      <section id="breakdown" class="my-4 p-6 bg-gray-900 rounded-xl">
+        <h2 class="text-gray-500 text-center mb-2">I'm owning</h2>
+        <div id="asset-list" class="mt-4">
+          <!-- Asset items will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Projection Summary -->
+      <section id="projection" class="my-4 p-6 bg-gray-900 rounded-xl">
+        <h2 class="text-gray-500 text-center mb-2">Next year projection</h2>
+        <div class="text-4xl font-bold my-4 text-green-500 text-center">
+          ₹<span id="projected-net-worth">0</span>
+          <!-- ₹ rupee was here before -->
+        </div>
+        <div class="text-xs text-gray-500 text-center">
+          <p>Based on historical average returns. Actual results may vary.</p>
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <nav
+        class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 flex justify-around py-3"
+      >
+        <button class="flex flex-col items-center text-white">
+          <i data-feather="pie-chart" class="h-6 w-6"></i>
+          <span class="text-xs mt-1">Home</span>
+        </button>
+        <button
+          id="view-assets-btn"
+          class="flex flex-col items-center text-gray-500"
+        >
+          <i data-feather="list" class="h-6 w-6"></i>
+          <span class="text-xs mt-1">Assets</span>
+        </button>
+      </nav>
+
+      <!-- Add/Edit Asset Modal -->
+      <div
+        id="asset-modal"
+        class="fixed inset-0 bg-black bg-opacity-90 hidden flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-gray-900 w-full max-w-md mx-4 rounded-lg overflow-hidden"
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-800 flex justify-between items-center"
+          >
+            <h3 class="text-lg font-semibold" id="modal-title">
+              Add what assets you own
+            </h3>
+            <button id="close-modal" class="text-gray-500">
+              <i data-feather="x" class="h-5 w-5"></i>
+            </button>
+          </div>
+
+          <form id="asset-form" class="px-6 py-4">
+            <div class="mb-4">
+              <label for="asset-category" class="block text-sm font-medium mb-1"
+                >I have..</label
+              >
+
+              <select
+                id="asset-category"
+                class="w-full p-2 bg-gray-800 border border-gray-700 rounded-md text-white"
+              >
+                <option value="">Choose...</option>
+                <!-- Asset categories will be populated here -->
+              </select>
+            </div>
+
+            <!-- Dynamic form fields will be inserted here based on asset category -->
+            <div id="dynamic-fields"></div>
+
+            <div class="flex justify-end mt-6 space-x-2">
+              <button
+                type="button"
+                id="delete-asset"
+                class="px-4 py-2 bg-red-800 text-white rounded-md hidden"
+              >
+                Remove
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 bg-green-800 text-white rounded-md"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Assets List View -->
+      <div
+        id="assets-view"
+        class="fixed inset-0 bg-black hidden z-40 flex flex-col"
+      >
+        <header
+          class="px-4 py-6 flex justify-between items-center border-b border-gray-800"
+        >
+          <h1 class="text-2xl font-bold">My Current assets</h1>
+          <button id="close-assets-view" class="text-gray-500">
+            <i data-feather="x" class="h-5 w-5"></i>
+          </button>
+        </header>
+
+        <div class="flex-1 overflow-auto p-4">
+          <div id="full-asset-list" class="space-y-3">
+            <!-- Full asset list will be rendered here -->
+          </div>
+
+          <div class="fixed bottom-20 right-6">
+            <button
+              id="add-asset-btn-list"
+              class="bg-green-800 hover:bg-green-700 text-white p-3 rounded-full shadow-lg"
+            >
+              <i data-feather="plus" class="h-6 w-6"></i>
+            </button>
+          </div>
+        </div>
+
+        <nav
+          class="bg-gray-900 border-t border-gray-800 flex justify-around py-3"
+        >
+          <button
+            id="view-overview-btn"
+            class="flex flex-col items-center text-gray-500"
+          >
+            <i data-feather="pie-chart" class="h-6 w-6"></i>
+            <span class="text-xs mt-1">Home</span>
+          </button>
+          <button class="flex flex-col items-center text-white">
+            <i data-feather="list" class="h-6 w-6"></i>
+            <span class="text-xs mt-1">Assets</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/assetCategories.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/components/slider.js"></script>
+    <script src="js/components/assetForm.js"></script>
+    <script src="js/components/dashboard.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      // Initialize Feather icons
+      feather.replace();
+    </script>
+  </body>
+</html>

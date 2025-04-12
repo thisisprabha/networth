@@ -1,0 +1,159 @@
+/* Ultra Minimal App Styles */
+:root {
+  --color-positive: #22c55e; /* Green */
+  --color-neutral: #f59e0b; /* Amber */
+  --color-negative: #ef4444; /* Red */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  background-color: #000;
+  color: #fff;
+}
+
+/* Custom Slider Styles - Now Dark by Default */
+.custom-slider {
+  width: 100%;
+  height: 8px; /* Increased height */
+  border-radius: 5px;
+  background: #4b5563; /* Darker grey track */
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer; /* Add cursor */
+}
+
+.custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px; /* Increased size */
+  height: 22px; /* Increased size */
+  border-radius: 50%;
+  background: var(--color-positive); /* Keep green thumb */
+  cursor: pointer;
+  border: 2px solid #1f2937; /* Optional: Add a small border matching input background */
+}
+
+.custom-slider::-moz-range-thumb {
+  width: 22px; /* Increased size */
+  height: 22px; /* Increased size */
+  border-radius: 50%;
+  background: var(--color-positive); /* Keep green thumb */
+  cursor: pointer;
+  border: 2px solid #1f2937; /* Optional: Add a small border matching input background */
+}
+
+/* Asset Card Styles */
+.asset-card {
+  padding: 12px;
+  background-color: #111;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.asset-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Status Colors */
+.color-positive {
+  color: var(--color-positive);
+}
+
+.color-neutral {
+  color: var(--color-neutral);
+}
+
+.color-negative {
+  color: var(--color-negative);
+}
+
+/* Animation for Modal and View Transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+#asset-modal {
+  animation: fadeIn 0.3s ease-out;
+}
+
+#asset-modal > div {
+  animation: slideUp 0.3s ease-out;
+}
+
+#assets-view {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Form Inputs - Dark Mode By Default */
+input,
+select,
+textarea {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  color: #fff;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-positive);
+}
+
+/* Space for Bottom Navigation */
+#app {
+  padding-bottom: 72px;
+}
+
+/* Making the app feel more native on mobile */
+@media (max-width: 768px) {
+  body {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input,
+  select,
+  button {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
