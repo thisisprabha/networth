@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function showPinPrompt(isNewPin = false) {
     appContainer.innerHTML = `
       <div class="pin-prompt flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
-        <h2 class="text-2xl mb-4">${
-          isNewPin ? "First time? Set 4-Digit PIN" : "Enter 4-Digit PIN"
+        <h2 class="text-2xl mb-4 text-center">${
+          isNewPin ? "First time? <br/> Set 4-Digit PIN" : "Enter 4-Digit PIN"
         }</h2>
         <input
           type="password"
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         />
         ${
           isNewPin
-            ? "<span class=text-gray-500 text-center mb-2>Make this easy to remember. Dont fuck it up.</span>"
+            ? '<span class="mb-4 text-gray-500 text-center">Make this easy to remember. Dont fuck it up.</span>'
             : "<span class=text-gray-500 text-center p-2></span>"
         }
         <button id="pin-submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
