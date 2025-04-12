@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         />
         ${
           isNewPin
-            ? '<span class="mb-4 text-gray-500 text-center">Make this easy to remember. Dont fuck it up.</span>'
+            ? "<span class=mb-4><span class=text-gray-500 text-center>Make this easy to remember. Dont fuck it up.</span></span>"
             : "<span class=text-gray-500 text-center p-2></span>"
         }
         <button id="pin-submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
