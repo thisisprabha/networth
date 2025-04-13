@@ -2,7 +2,7 @@
   "name": "Net Worth",
   "short_name": "NetWorth",
   "description": "A private, offline-first net worth tracking application",
-  "start_url": "/",
+  "start_url": "/networth/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
