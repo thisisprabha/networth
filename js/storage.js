@@ -8,6 +8,63 @@ class StorageService {
     this.ASSETS_KEY = "networthvault_assets";
     this.SETTINGS_KEY = "networthvault_settings";
     this.LAST_UPDATED_KEY = "networthvault_lastUpdated";
+    this.SYNC_TIMESTAMP_KEY = "networthvault_sync_timestamp";
+
+    // Initialize storage event listener for cross-context sync
+    this.initStorageSync();
+  }
+
+  /**
+   * Initialize storage event listener for cross-context synchronization
+   */
+  initStorageSync() {
+    window.addEventListener("storage", (event) => {
+      console.log("Storage event detected:", event.key, event.newValue);
+      if (event.key === this.ASSETS_KEY || event.key === this.SETTINGS_KEY) {
+        try {
+          const newData = event.newValue ? JSON.parse(event.newValue) : null;
+          if (newData) {
+            console.log(`Syncing ${event.key} with new data:`, newData);
+            localStorage.setItem(event.key, JSON.stringify(newData));
+            // Update sync timestamp
+            localStorage.setItem(
+              this.SYNC_TIMESTAMP_KEY,
+              Date.now().toString()
+            );
+          }
+        } catch (error) {
+          console.error("Error syncing storage data:", error);
+        }
+      }
+    });
+  }
+
+  /**
+   * Merge assets from another context (e.g., browser to Home Screen)
+   * @param {Array} newAssets Assets from another context
+   */
+  mergeAssets(newAssets) {
+    const currentAssets = this.getAssets();
+    const mergedAssets = [...currentAssets];
+
+    newAssets.forEach((newAsset) => {
+      const existingIndex = mergedAssets.findIndex((a) => a.id === newAsset.id);
+      if (existingIndex >= 0) {
+        // Update existing asset if newer
+        if (
+          new Date(newAsset.updatedAt) >
+          new Date(mergedAssets[existingIndex].updatedAt)
+        ) {
+          mergedAssets[existingIndex] = newAsset;
+        }
+      } else {
+        // Add new asset
+        mergedAssets.push(newAsset);
+      }
+    });
+
+    this.saveAssets(mergedAssets);
+    return mergedAssets;
   }
 
   /**
@@ -49,7 +106,6 @@ class StorageService {
       if (existingIndex >= 0) {
         assets[existingIndex] = asset;
       } else {
-        // Ensure the asset has an ID
         if (!asset.id) {
           asset.id = this.generateId();
         }
@@ -72,7 +128,7 @@ class StorageService {
   deleteAsset(assetId) {
     try {
       const assets = this.getAssets();
-      const updatedAssets = assets.filter((a) => a.id !== a.id);
+      const updatedAssets = assets.filter((a) => a.id !== assetId);
 
       if (updatedAssets.length !== assets.length) {
         this.saveAssets(updatedAssets);
@@ -148,7 +204,6 @@ class StorageService {
         reader.onload = (e) => {
           try {
             const text = e.target.result;
-            // Parse CSV using regex to handle quoted fields
             const rows = [];
             const lines = text.split("\n").filter((line) => line.trim());
             for (const line of lines) {
@@ -162,7 +217,7 @@ class StorageService {
                   field = field.slice(1, -1).replace(/""/g, '"');
                 }
                 fields.push(field.trim());
-                if (match[3] === "") break; // End of line
+                if (match[3] === "") break;
               }
               if (fields.length >= 8) rows.push(fields);
             }
@@ -181,31 +236,17 @@ class StorageService {
               "updatedAt",
             ];
             if (!expectedHeaders.every((h, i) => h === headers[i])) {
-              console.error(
-                "Header mismatch. Expected:",
-                expectedHeaders,
-                "Got:",
-                headers
-              );
               throw new Error(
                 "Invalid CSV format. Expected headers: " +
                   expectedHeaders.join(",")
               );
             }
 
-            console.log(
-              "assetCategories available:",
-              !!assetCategories,
-              assetCategories
-            );
-            const validCategories = assetCategories
-              ? Object.keys(assetCategories)
-              : [];
+            const validCategories = Object.keys(assetCategories);
             console.log("Valid categories:", validCategories);
 
             const assets = this.getAssets();
             const existingIds = new Set(assets.map((a) => a.id));
-            console.log("Existing asset IDs:", [...existingIds]);
 
             const newAssets = rows
               .slice(1)
@@ -225,7 +266,6 @@ class StorageService {
                   let values;
                   try {
                     values = valuesStr ? JSON.parse(valuesStr) : {};
-                    console.log(`Parsed values for row ${index + 2}:`, values);
                   } catch (parseError) {
                     console.warn(
                       `Invalid values JSON in row ${index + 2}:`,
@@ -246,34 +286,19 @@ class StorageService {
                     updatedAt: row[7] || new Date().toISOString(),
                   };
 
-                  console.log(`Constructed asset for row ${index + 2}:`, asset);
-
-                  // Basic validation
                   if (!asset.name || asset.name.trim() === "") {
                     console.warn(`Skipping row ${index + 2}: Missing name`);
-                    return null;
-                  }
-                  if (!asset.category) {
-                    console.warn(`Skipping row ${index + 2}: Missing category`);
                     return null;
                   }
                   if (!validCategories.includes(asset.category)) {
                     console.warn(
                       `Skipping row ${index + 2}: Invalid category '${
                         asset.category
-                      }'. Valid categories:`,
-                      validCategories
+                      }'`
                     );
                     return null;
                   }
-                  if (!asset.values || typeof asset.values !== "object") {
-                    console.warn(
-                      `Skipping row ${index + 2}: Invalid values object`
-                    );
-                    asset.values = {};
-                  }
 
-                  console.log(`Valid asset in row ${index + 2}:`, asset);
                   return asset;
                 } catch (rowError) {
                   console.warn(
@@ -288,12 +313,6 @@ class StorageService {
             console.log(`Assets to add: ${newAssets.length}`, newAssets);
             if (newAssets.length > 0) {
               this.saveAssets([...assets, ...newAssets]);
-              console.log("Saved assets to localStorage:", [
-                ...assets,
-                ...newAssets,
-              ]);
-            } else {
-              console.warn("No new assets to add after validation");
             }
             resolve(newAssets.length);
           } catch (error) {
@@ -399,6 +418,7 @@ class StorageService {
     localStorage.removeItem(this.ASSETS_KEY);
     localStorage.removeItem(this.SETTINGS_KEY);
     localStorage.removeItem(this.LAST_UPDATED_KEY);
+    localStorage.removeItem(this.SYNC_TIMESTAMP_KEY);
   }
 }
 

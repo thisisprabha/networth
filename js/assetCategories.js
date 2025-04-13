@@ -111,7 +111,7 @@ const assetCategories = {
     },
   },
   personalAssets: {
-    name: "Personal Property",
+    name: "My Belongings",
     icon: "package",
     color: "text-purple-500",
     fields: [

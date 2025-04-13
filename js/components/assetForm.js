@@ -38,8 +38,8 @@ class AssetForm {
             <div id="dynamic-fields" class="mb-4"></div>
             <div class="flex justify-end gap-2">
               <button type="button" id="cancel-asset" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">Cancel</button>
-              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
               <button id="delete-asset" class="hidden px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Delete</button>
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
             </div>
           </form>
         </div>

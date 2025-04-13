@@ -2,7 +2,6 @@
  * Net Worth - Main Application
  * A private, offline-first net worth tracking application
  */
-
 document.addEventListener("DOMContentLoaded", () => {
   // Check if storageService and calculationsService are available
   if (
@@ -47,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             : "<span class=text-gray-500 text-center p-2></span>"
         }
         <button id="pin-submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          ${isNewPin ? "Set PIN" : "Submit"} 
+          ${isNewPin ? "Set PIN" : "Submit"}
         </button>
         <p id="pin-error" class="text-red-500 mt-2 hidden">Invalid PIN. Try again.</p>
       </div>
@@ -65,13 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (isNewPin) {
-        // Save PIN (add CryptoJS here if used)
-        localStorage.setItem(PIN_KEY, enteredPin); // Replace with CryptoJS if installed
+        localStorage.setItem(PIN_KEY, enteredPin);
         initializeApp();
       } else {
         const storedPin = localStorage.getItem(PIN_KEY);
         if (enteredPin === storedPin) {
-          // Replace with CryptoJS if installed
           initializeApp();
         } else {
           pinError.classList.remove("hidden");
@@ -97,11 +94,19 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Check launch context (Home Screen vs. Browser)
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      navigator.standalone;
+    console.log(
+      "App launch context:",
+      isStandalone ? "Standalone (Home Screen)" : "Browser"
+    );
+
     function renderFullAssetList() {
       const fullAssetList = document.getElementById("full-asset-list");
       if (!fullAssetList) {
         console.error('Element with ID "full-asset-list" not found.');
-        // Create it if missing
         const assetsView = document.getElementById("assets-view");
         if (assetsView) {
           assetsView.innerHTML = '<div id="full-asset-list"></div>';
@@ -209,13 +214,13 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Asset form container not found, creating one.");
       const newFormContainer = document.createElement("div");
       newFormContainer.id = "asset-form-container";
-      newFormContainer.className = "hidden"; // Hide by default
+      newFormContainer.className = "hidden";
       appContainer.appendChild(newFormContainer);
     }
 
     dashboard.init();
 
-    // Add Import/Export UI (if previously added)
+    // Add Import/Export UI
     const settingsSection = document.createElement("div");
     settingsSection.className = "p-4 border-t border-gray-700 text-center";
     settingsSection.innerHTML = `
