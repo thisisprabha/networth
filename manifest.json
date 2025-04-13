@@ -4,6 +4,7 @@
   "description": "A private, offline-first net worth tracking application",
   "start_url": "/networth/",
   "display": "standalone",
+  "scope": "/",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
