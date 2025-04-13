@@ -72,7 +72,7 @@ class StorageService {
   deleteAsset(assetId) {
     try {
       const assets = this.getAssets();
-      const updatedAssets = assets.filter((a) => a.id !== assetId);
+      const updatedAssets = assets.filter((a) => a.id !== a.id);
 
       if (updatedAssets.length !== assets.length) {
         this.saveAssets(updatedAssets);
@@ -91,26 +91,29 @@ class StorageService {
   exportToCSV() {
     try {
       const assets = this.getAssets();
+      console.log("Exporting assets:", assets);
       const headers = [
         "id",
-        "name",
-        "value",
         "category",
-        "color",
+        "name",
         "icon",
-        "lastUpdated",
+        "color",
+        "values",
+        "createdAt",
+        "updatedAt",
       ];
       const csvRows = [
         headers.join(","), // Header row
         ...assets.map((asset) =>
           [
-            asset.id,
-            `"${(asset.name || "").replace(/"/g, '""')}"`, // Escape quotes
-            asset.value || 0,
+            asset.id || "",
             asset.category || "",
-            asset.color || "",
+            `"${(asset.name || "").replace(/"/g, '""')}"`, // Escape quotes
             asset.icon || "",
-            asset.lastUpdated || "",
+            asset.color || "",
+            `"${JSON.stringify(asset.values || {}).replace(/"/g, '""')}"`, // Stringify values
+            asset.createdAt || "",
+            asset.updatedAt || "",
           ].join(",")
         ),
       ];
@@ -133,7 +136,7 @@ class StorageService {
   /**
    * Import assets from CSV
    * @param {File} file CSV file to import
-   * @returns {Promise} Resolves on success, rejects on error
+   * @returns {Promise} Resolves with number of imported assets, rejects on error
    */
   importFromCSV(file) {
     return new Promise((resolve, reject) => {
@@ -145,67 +148,163 @@ class StorageService {
         reader.onload = (e) => {
           try {
             const text = e.target.result;
-            const rows = text.split("\n").map((row) => row.split(","));
+            // Parse CSV using regex to handle quoted fields
+            const rows = [];
+            const lines = text.split("\n").filter((line) => line.trim());
+            for (const line of lines) {
+              const fields = [];
+              const regex = /("([^"]*"")*"|[^,]*)(,|$)/g;
+              let match;
+              let currentLine = line + ",";
+              while ((match = regex.exec(currentLine)) !== null) {
+                let field = match[1];
+                if (field.startsWith('"') && field.endsWith('"')) {
+                  field = field.slice(1, -1).replace(/""/g, '"');
+                }
+                fields.push(field.trim());
+                if (match[3] === "") break; // End of line
+              }
+              if (fields.length >= 8) rows.push(fields);
+            }
+
+            console.log("Parsed CSV rows:", rows);
+
             const headers = rows[0];
             const expectedHeaders = [
               "id",
-              "name",
-              "value",
               "category",
-              "color",
+              "name",
               "icon",
-              "lastUpdated",
+              "color",
+              "values",
+              "createdAt",
+              "updatedAt",
             ];
             if (!expectedHeaders.every((h, i) => h === headers[i])) {
+              console.error(
+                "Header mismatch. Expected:",
+                expectedHeaders,
+                "Got:",
+                headers
+              );
               throw new Error(
                 "Invalid CSV format. Expected headers: " +
                   expectedHeaders.join(",")
               );
             }
 
-            const validCategories = Object.keys(assetCategories); // From assetCategories.js
+            console.log(
+              "assetCategories available:",
+              !!assetCategories,
+              assetCategories
+            );
+            const validCategories = assetCategories
+              ? Object.keys(assetCategories)
+              : [];
+            console.log("Valid categories:", validCategories);
+
             const assets = this.getAssets();
             const existingIds = new Set(assets.map((a) => a.id));
+            console.log("Existing asset IDs:", [...existingIds]);
 
-            const newAssets = rows.slice(1).map((row) => {
-              const asset = {
-                id: row[0],
-                name: row[1].replace(/^"|"$/g, "").replace(/""/g, '"'), // Unescape quotes
-                value: parseFloat(row[2]),
-                category: row[3],
-                color: row[4] || "",
-                icon: row[5] || "",
-                lastUpdated: row[6] || new Date().toISOString(),
-              };
-              // Validate asset
-              if (!asset.id) asset.id = this.generateId();
-              if (!asset.name || asset.name.trim() === "") {
-                throw new Error("Asset name is required");
-              }
-              if (isNaN(asset.value)) {
-                throw new Error(`Invalid value for asset: ${asset.name}`);
-              }
-              if (!validCategories.includes(asset.category)) {
-                throw new Error(
-                  `Invalid category for asset ${asset.name}: ${asset.category}`
-                );
-              }
-              return asset;
-            });
+            const newAssets = rows
+              .slice(1)
+              .map((row, index) => {
+                try {
+                  console.log(`Processing row ${index + 2}:`, row);
+                  if (row.length < headers.length) {
+                    console.warn(
+                      `Row ${index + 2} has insufficient columns (${
+                        row.length
+                      }):`,
+                      row
+                    );
+                    return null;
+                  }
+                  const valuesStr = row[5];
+                  let values;
+                  try {
+                    values = valuesStr ? JSON.parse(valuesStr) : {};
+                    console.log(`Parsed values for row ${index + 2}:`, values);
+                  } catch (parseError) {
+                    console.warn(
+                      `Invalid values JSON in row ${index + 2}:`,
+                      valuesStr,
+                      parseError
+                    );
+                    return null;
+                  }
 
-            // Merge new assets (skip duplicates by id)
-            const assetsToAdd = newAssets.filter((a) => !existingIds.has(a.id));
-            if (assetsToAdd.length > 0) {
-              this.saveAssets([...assets, ...assetsToAdd]);
+                  const asset = {
+                    id: row[0] || this.generateId(),
+                    category: row[1] || "",
+                    name: row[2],
+                    icon: row[3] || "",
+                    color: row[4] || "",
+                    values,
+                    createdAt: row[6] || new Date().toISOString(),
+                    updatedAt: row[7] || new Date().toISOString(),
+                  };
+
+                  console.log(`Constructed asset for row ${index + 2}:`, asset);
+
+                  // Basic validation
+                  if (!asset.name || asset.name.trim() === "") {
+                    console.warn(`Skipping row ${index + 2}: Missing name`);
+                    return null;
+                  }
+                  if (!asset.category) {
+                    console.warn(`Skipping row ${index + 2}: Missing category`);
+                    return null;
+                  }
+                  if (!validCategories.includes(asset.category)) {
+                    console.warn(
+                      `Skipping row ${index + 2}: Invalid category '${
+                        asset.category
+                      }'. Valid categories:`,
+                      validCategories
+                    );
+                    return null;
+                  }
+                  if (!asset.values || typeof asset.values !== "object") {
+                    console.warn(
+                      `Skipping row ${index + 2}: Invalid values object`
+                    );
+                    asset.values = {};
+                  }
+
+                  console.log(`Valid asset in row ${index + 2}:`, asset);
+                  return asset;
+                } catch (rowError) {
+                  console.warn(
+                    `Skipping row ${index + 2}: ${rowError.message}`,
+                    rowError
+                  );
+                  return null;
+                }
+              })
+              .filter((asset) => asset !== null);
+
+            console.log(`Assets to add: ${newAssets.length}`, newAssets);
+            if (newAssets.length > 0) {
+              this.saveAssets([...assets, ...newAssets]);
+              console.log("Saved assets to localStorage:", [
+                ...assets,
+                ...newAssets,
+              ]);
+            } else {
+              console.warn("No new assets to add after validation");
             }
-            resolve(assetsToAdd.length);
+            resolve(newAssets.length);
           } catch (error) {
+            console.error("Import error:", error);
             reject(error);
           }
         };
         reader.onerror = () => reject(new Error("Failed to read file"));
         reader.readAsText(file);
       } catch (error) {
+        console.error("Import initialization error:", error);
         reject(error);
       }
     });

@@ -8,8 +8,48 @@ class AssetForm {
     this.onSave = onSave;
     this.currentAsset = null;
     this.sliders = {};
+    this.formContainer = document.getElementById("asset-modal");
 
-    // Initialize event listeners
+    // Initialize form HTML
+    this.initForm();
+  }
+
+  /**
+   * Initialize form HTML
+   */
+  initForm() {
+    if (!this.formContainer) {
+      console.error("Asset modal container (#asset-modal) not found.");
+      return;
+    }
+
+    // Render form HTML
+    this.formContainer.innerHTML = `
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+          <h2 id="modal-title" class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Add Asset</h2>
+          <form id="asset-form">
+            <div class="mb-4">
+              <label for="asset-category" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Category</label>
+              <select id="asset-category" class="w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md text-gray-900 dark:text-white">
+                <option value="">Select category</option>
+              </select>
+            </div>
+            <div id="dynamic-fields" class="mb-4"></div>
+            <div class="flex justify-end gap-2">
+              <button type="button" id="cancel-asset" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">Cancel</button>
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
+              <button id="delete-asset" class="hidden px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+
+    // Populate category dropdown
+    this.populateCategoryDropdown();
+
+    // Initialize event listeners after form exists
     this.initEventListeners();
   }
 
@@ -17,10 +57,15 @@ class AssetForm {
    * Set up event listeners for asset form
    */
   initEventListeners() {
-    // Get form elements
     const form = document.getElementById("asset-form");
     const categorySelect = document.getElementById("asset-category");
     const deleteButton = document.getElementById("delete-asset");
+    const cancelButton = document.getElementById("cancel-asset");
+
+    if (!form || !categorySelect || !deleteButton || !cancelButton) {
+      console.warn("Form elements not found, skipping event listeners.");
+      return;
+    }
 
     // Handle category selection change
     categorySelect.addEventListener("change", () => {
@@ -41,6 +86,11 @@ class AssetForm {
         this.deleteAsset();
       }
     });
+
+    // Handle cancel button
+    cancelButton.addEventListener("click", () => {
+      this.closeForm();
+    });
   }
 
   /**
@@ -48,6 +98,10 @@ class AssetForm {
    */
   populateCategoryDropdown() {
     const categorySelect = document.getElementById("asset-category");
+    if (!categorySelect) {
+      console.warn("asset-category select not found.");
+      return;
+    }
 
     // Clear existing options except the first one
     while (categorySelect.options.length > 1) {
@@ -69,6 +123,8 @@ class AssetForm {
    */
   renderDynamicFields(category) {
     const dynamicFields = document.getElementById("dynamic-fields");
+    if (!dynamicFields) return;
+
     dynamicFields.innerHTML = "";
     this.sliders = {};
 
@@ -85,14 +141,14 @@ class AssetForm {
 
       const label = document.createElement("label");
       label.htmlFor = field.id;
-      label.className = "block text-sm font-medium mb-1";
+      label.className =
+        "block text-sm font-medium mb-1 text-gray-900 dark:text-white";
       label.textContent = field.label;
       fieldContainer.appendChild(label);
 
       // Create input based on field type
       switch (field.type) {
         case "slider":
-          // Create slider component
           const slider = new Slider({
             id: field.id,
             min: field.min,
@@ -111,7 +167,7 @@ class AssetForm {
           numberInput.id = field.id;
           numberInput.name = field.id;
           numberInput.className =
-            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md";
+            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md text-gray-900 dark:text-white";
           numberInput.min = field.min !== undefined ? field.min : "";
           numberInput.max = field.max !== undefined ? field.max : "";
           numberInput.step = field.step || 1;
@@ -128,7 +184,7 @@ class AssetForm {
           textInput.id = field.id;
           textInput.name = field.id;
           textInput.className =
-            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md";
+            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md text-gray-900 dark:text-white";
           textInput.value = this.getCurrentValue(field.id, field.defaultValue);
           fieldContainer.appendChild(textInput);
           break;
@@ -139,7 +195,7 @@ class AssetForm {
           dateInput.id = field.id;
           dateInput.name = field.id;
           dateInput.className =
-            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md";
+            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md text-gray-900 dark:text-white";
           dateInput.value = this.getCurrentValue(field.id, field.defaultValue);
           fieldContainer.appendChild(dateInput);
           break;
@@ -149,9 +205,8 @@ class AssetForm {
           select.id = field.id;
           select.name = field.id;
           select.className =
-            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md";
+            "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md text-gray-900 dark:text-white";
 
-          // Add options
           field.options.forEach((option) => {
             const optionElement = document.createElement("option");
             optionElement.value = option.value;
@@ -159,19 +214,16 @@ class AssetForm {
             select.appendChild(optionElement);
           });
 
-          // Set current value if editing
           if (this.currentAsset && this.currentAsset.values[field.id]) {
             select.value = this.currentAsset.values[field.id];
           }
 
-          // Add change event to update default value
           select.addEventListener("change", (e) => {
             if (field.id === "assetType") {
               const selectedOption = field.options.find(
                 (opt) => opt.value === e.target.value
               );
               const valueSlider = this.sliders["assetValue"];
-
               if (valueSlider && selectedOption) {
                 valueSlider.setValue(selectedOption.defaultValue);
               }
@@ -193,7 +245,8 @@ class AssetForm {
 
       const growthRateLabel = document.createElement("label");
       growthRateLabel.htmlFor = "growthRate";
-      growthRateLabel.className = "block text-sm font-medium mb-1";
+      growthRateLabel.className =
+        "block text-sm font-medium mb-1 text-gray-900 dark:text-white";
       growthRateLabel.textContent = "Annual Growth Rate (%)";
 
       const growthRateInput = document.createElement("input");
@@ -201,10 +254,9 @@ class AssetForm {
       growthRateInput.id = "growthRate";
       growthRateInput.name = "growthRate";
       growthRateInput.className =
-        "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md";
+        "w-full p-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded-md text-gray-900 dark:text-white";
       growthRateInput.step = 0.1;
 
-      // Set range based on category configuration
       if (categoryConfig.growthRate.min !== undefined) {
         growthRateInput.min = categoryConfig.growthRate.min;
       }
@@ -213,7 +265,6 @@ class AssetForm {
         growthRateInput.max = categoryConfig.growthRate.max;
       }
 
-      // Get growth rate from settings or use default
       const settings = this.storageService.getSettings();
       growthRateInput.value =
         settings.growthRates[category] || categoryConfig.growthRate.default;
@@ -221,7 +272,6 @@ class AssetForm {
       growthRateContainer.appendChild(growthRateLabel);
       growthRateContainer.appendChild(growthRateInput);
 
-      // Add note about growth rate
       const growthNote = document.createElement("div");
       growthNote.className = "text-xs text-gray-500 dark:text-gray-400 mt-1";
       growthNote.textContent = "Used for projection calculations only";
@@ -258,6 +308,17 @@ class AssetForm {
     const dynamicFields = document.getElementById("dynamic-fields");
     const deleteButton = document.getElementById("delete-asset");
 
+    if (
+      !modal ||
+      !modalTitle ||
+      !categorySelect ||
+      !dynamicFields ||
+      !deleteButton
+    ) {
+      console.error("Form elements missing in showAddForm.");
+      return;
+    }
+
     // Reset form
     this.currentAsset = null;
     modalTitle.textContent = "Add Asset";
@@ -265,7 +326,7 @@ class AssetForm {
     dynamicFields.innerHTML = "";
     deleteButton.classList.add("hidden");
 
-    // Populate dropdown
+    // Populate dropdown (redundant if initForm already did, but safe)
     this.populateCategoryDropdown();
 
     // Show modal
@@ -281,6 +342,11 @@ class AssetForm {
     const modalTitle = document.getElementById("modal-title");
     const categorySelect = document.getElementById("asset-category");
     const deleteButton = document.getElementById("delete-asset");
+
+    if (!modal || !modalTitle || !categorySelect || !deleteButton) {
+      console.error("Form elements missing in showEditForm.");
+      return;
+    }
 
     // Set current asset and form title
     this.currentAsset = asset;
@@ -303,13 +369,12 @@ class AssetForm {
    */
   closeForm() {
     const modal = document.getElementById("asset-modal");
-    modal.classList.add("hidden");
+    if (modal) {
+      modal.classList.add("hidden");
+    }
     this.currentAsset = null;
   }
 
-  /**
-   * Save current asset data
-   */
   /**
    * Save current asset data
    */
@@ -318,13 +383,10 @@ class AssetForm {
     const category = categorySelect.value;
 
     if (!category) {
-      // Maybe use a less intrusive notification?
-      // uiService.showNotification('Please select an asset type', 'error');
       alert("Choose what you own");
       return;
     }
 
-    // Collect form values (Keep this part as is)
     const values = {};
     const categoryConfig = assetCategories[category];
     categoryConfig.fields.forEach((field) => {
@@ -340,11 +402,10 @@ class AssetForm {
       }
     });
 
-    // Create or update asset object (Keep this part as is)
     const asset = {
       id: this.currentAsset
         ? this.currentAsset.id
-        : this.storageService.generateId(), // Ensure ID exists for new assets
+        : this.storageService.generateId(),
       category,
       name: categoryConfig.name,
       icon: categoryConfig.icon,
@@ -356,28 +417,19 @@ class AssetForm {
       updatedAt: new Date().toISOString(),
     };
 
-    // Save growth rate setting (Keep this part as is)
     const growthRateInput = document.getElementById("growthRate");
     if (growthRateInput && categoryConfig.growthRate) {
-      // Check if growthRate exists for category
       const settings = this.storageService.getSettings();
-      if (!settings.growthRates) settings.growthRates = {}; // Initialize if needed
+      if (!settings.growthRates) settings.growthRates = {};
       settings.growthRates[category] = Number(growthRateInput.value);
       this.storageService.saveSettings(settings);
     }
 
-    // Save to storage
     const savedAsset = this.storageService.saveAsset(asset);
+    this.closeForm();
 
-    // Close form
-    this.closeForm(); // Close modal first
-
-    // --- REMOVE direct dashboard.refresh() call here ---
-    // dashboard.refresh(); // This is now handled by the onSave callback
-
-    // Call onSave callback if provided - THIS WILL HANDLE REFRESHING
     if (typeof this.onSave === "function") {
-      this.onSave(savedAsset); // Pass saved asset if needed by callback
+      this.onSave(savedAsset);
     }
   }
 
@@ -387,19 +439,16 @@ class AssetForm {
   deleteAsset() {
     if (!this.currentAsset) return;
 
-    const assetIdToDelete = this.currentAsset.id; // Store ID before closing form
+    const assetIdToDelete = this.currentAsset.id;
     const deleted = this.storageService.deleteAsset(assetIdToDelete);
 
     if (deleted) {
-      // Close form
-      this.closeForm(); // Close modal first
-
-      // Call onSave callback to refresh views - PASS NO ARGUMENT TO INDICATE DELETION
+      this.closeForm();
       if (typeof this.onSave === "function") {
-        this.onSave(); // Call without argument to signify deletion/refresh needed
+        this.onSave();
       }
     } else {
-      alert("Failed to delete asset."); // Or use uiService notification
+      alert("Failed to delete asset.");
     }
   }
 }
