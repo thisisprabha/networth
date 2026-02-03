@@ -1,0 +1,36 @@
+name: NetWorthIOS
+
+options:
+  bundleIdPrefix: com.prabhakaran
+
+settings:
+  base:
+    TARGETED_DEVICE_FAMILY: 1,2
+
+targets:
+  NetWorthIOS:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: NetWorthIOS
+    info:
+      path: NetWorthIOS/Info.plist
+      properties:
+        NSFaceIDUsageDescription: "Unlock your NetWorth data."
+        UILaunchStoryboardName: "LaunchScreen"
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.prabhakaran.networth
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0
