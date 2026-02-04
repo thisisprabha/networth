@@ -27,23 +27,35 @@ struct AssetFormView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Category") {
+                Section {
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(AssetCategoryDefinition.ordered, id: \.self) { category in
                             Text(category.definition.name).tag(category)
                         }
                     }
                     .disabled(isEditing)
+                } header: {
+                    Text("Category")
+                } footer: {
+                    Text(isEditing ? "Category can’t be changed after saving." : "Choose the category that best describes this asset.")
                 }
 
-                Section("Details") {
+                Section {
                     ForEach(selectedCategory.definition.fields, id: \.id) { field in
                         fieldView(field)
                     }
+                } header: {
+                    Text("Details")
+                } footer: {
+                    Text("Values are stored in INR.")
                 }
 
-                Section("Projection") {
+                Section {
                     growthRateField
+                } header: {
+                    Text("Projection")
+                } footer: {
+                    Text("Used only for the 1‑year projection.")
                 }
             }
             .navigationTitle(isEditing ? "Edit Asset" : "Add Asset")
@@ -68,6 +80,7 @@ struct AssetFormView: View {
         updatedDraft.category = selectedCategory
         let asset = updatedDraft.asAsset(updatedAt: Date())
         store.upsert(asset)
+        Haptics.success()
         dismiss()
     }
 
@@ -108,9 +121,9 @@ struct AssetFormView: View {
 
     private var growthRateField: some View {
         let range = selectedCategory.definition.growthRateRange
-        return VStack(alignment: .leading, spacing: 6) {
+        return VStack(alignment: .leading, spacing: Theme.Spacing.small) {
             Text("Annual Growth Rate (%)")
-                .font(.subheadline)
+                .font(AppFont.font(.subheadline))
                 .foregroundStyle(Theme.secondaryText)
             TextField(
                 "Rate",
@@ -118,11 +131,11 @@ struct AssetFormView: View {
                 format: .number.precision(.fractionLength(1))
             )
             .keyboardType(.decimalPad)
-            if let range {
-                Text("Suggested range: \(range.lowerBound, format: .number)–\(range.upperBound, format: .number)")
-                    .font(.caption)
-                    .foregroundStyle(Theme.secondaryText)
-            }
+                if let range {
+                    Text("Suggested range: \(range.lowerBound, format: .number)–\(range.upperBound, format: .number)")
+                        .font(AppFont.font(.caption))
+                        .foregroundStyle(Theme.secondaryText)
+                }
         }
     }
 
@@ -198,7 +211,7 @@ private struct SliderFieldView: View {
     let format: FieldFormat
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.small) {
             HStack {
                 Text(title)
                 Spacer()

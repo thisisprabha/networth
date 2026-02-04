@@ -14,10 +14,6 @@ struct HomeView: View {
         CalculationsService.oneYearProjection(assets: store.assets, settings: store.settings)
     }
 
-    private var projectionPoints: [ProjectionPoint] {
-        CalculationsService.projection(assets: store.assets, settings: store.settings, months: 12)
-    }
-
     private var categorySummaries: [CategorySummary] {
         CalculationsService.categorySummaries(assets: store.assets, includeInNetWorth: true, isLiability: false)
     }
@@ -30,54 +26,64 @@ struct HomeView: View {
         store.assets.sorted { CalculationsService.assetValue($0) > CalculationsService.assetValue($1) }.prefix(3).map { $0 }
     }
 
+    private var projectionSeries: [ProjectionSeriesPoint] {
+        CalculationsService.projectionSeries(assets: store.assets, settings: store.settings, months: 12)
+    }
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                StaggeredCard(isVisible: showCards, delay: 0.0) {
-                    HeroHeaderView(
-                        currentValue: currentNetWorth,
-                        projectionValue: projectionValue,
-                        percentGrowth: percentGrowth,
-                        lastUpdated: lastUpdated
-                    )
-                }
+        ZStack {
+            Theme.background
+                .ignoresSafeArea()
 
-                StaggeredCard(isVisible: showCards, delay: 0.08) {
-                    CategoryPreviewCard(
-                        categories: topCategories,
-                        onSeeAll: { tabSelection = .assets }
-                    )
-                }
+            ScrollView {
+                VStack(spacing: Theme.Spacing.large) {
+                    StaggeredCard(isVisible: showCards, delay: 0.0) {
+                        HeroHeaderView(
+                            currentValue: currentNetWorth,
+                            projectionValue: projectionValue,
+                            percentGrowth: percentGrowth,
+                            lastUpdated: lastUpdated
+                        )
+                    }
 
-                StaggeredCard(isVisible: showCards, delay: 0.16) {
-                    InsightsCard(delta: deltaSinceLast, topShare: topShare)
-                }
+                    StaggeredCard(isVisible: showCards, delay: 0.06) {
+                        PrimaryActionCard {
+                            tabSelection = .assets
+                        }
+                    }
 
-                StaggeredCard(isVisible: showCards, delay: 0.24) {
-                    TrendCard(snapshots: trendPoints)
-                }
+                    StaggeredCard(isVisible: showCards, delay: 0.12) {
+                        InsightsCard(delta: deltaSinceLast)
+                    }
 
-                StaggeredCard(isVisible: showCards, delay: 0.32) {
-                    DriversCard(changes: driverChanges)
-                }
+                    StaggeredCard(isVisible: showCards, delay: 0.20) {
+                        CategoryPreviewCard(
+                            categories: topCategories,
+                            onSeeAll: { tabSelection = .assets }
+                        )
+                    }
 
-                StaggeredCard(isVisible: showCards, delay: 0.40) {
-                    ProjectionCard(
-                        points: projectionPoints,
-                        currentValue: currentNetWorth,
-                        projectionValue: projectionValue,
-                        percentGrowth: percentGrowth
-                    )
-                }
+                    StaggeredCard(isVisible: showCards, delay: 0.28) {
+                        TrendCard(snapshots: trendPoints)
+                    }
 
-                StaggeredCard(isVisible: showCards, delay: 0.48) {
-                    TopAssetsCard(assets: topAssets)
+                    StaggeredCard(isVisible: showCards, delay: 0.36) {
+                        ProjectionCard(
+                            series: projectionSeries,
+                            currentValue: currentNetWorth,
+                            projectionValue: projectionValue,
+                            percentGrowth: percentGrowth
+                        )
+                    }
+
+                    StaggeredCard(isVisible: showCards, delay: 0.44) {
+                        TopAssetsCard(assets: topAssets)
+                    }
                 }
+                .padding(.horizontal, Theme.Spacing.screenHorizontal)
+                .padding(.vertical, Theme.Spacing.screenVertical)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
         }
-        .background(Theme.background)
         .scrollContentBackground(.hidden)
         .navigationTitle("Net Worth")
         .task {
@@ -105,29 +111,8 @@ struct HomeView: View {
         return NetWorthDelta(amount: amount, percent: percent)
     }
 
-    private var topShare: Double? {
-        guard currentNetWorth > 0 else { return nil }
-        let sum = topCategories.reduce(0) { $0 + $1.total }
-        return sum / currentNetWorth
-    }
-
     private var trendPoints: [NetWorthSnapshot] {
         Array(store.snapshots.suffix(12))
-    }
-
-    private var driverChanges: [DriverChange] {
-        guard store.snapshots.count >= 2 else { return [] }
-        let last = store.snapshots.last!
-        let previous = store.snapshots.dropLast().last!
-        let keys = Set(last.categoryTotals.keys).union(previous.categoryTotals.keys)
-        let changes = keys.compactMap { key -> DriverChange? in
-            let newValue = last.categoryTotals[key] ?? 0
-            let oldValue = previous.categoryTotals[key] ?? 0
-            let delta = newValue - oldValue
-            guard delta != 0, let category = AssetCategory(rawValue: key) else { return nil }
-            return DriverChange(category: category, delta: delta)
-        }
-        return changes.sorted { abs($0.delta) > abs($1.delta) }
     }
 }
 
@@ -135,12 +120,17 @@ private struct StaggeredCard<Content: View>: View {
     let isVisible: Bool
     let delay: Double
     @ViewBuilder var content: Content
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        content
-            .opacity(isVisible ? 1 : 0)
-            .offset(y: isVisible ? 0 : 18)
-            .animation(.spring(response: 0.7, dampingFraction: 0.9).delay(delay), value: isVisible)
+        if reduceMotion {
+            content
+        } else {
+            content
+                .opacity(isVisible ? 1 : 0)
+                .offset(y: isVisible ? 0 : 18)
+                .animation(.spring(response: 0.7, dampingFraction: 0.9).delay(delay), value: isVisible)
+        }
     }
 }
 
@@ -149,10 +139,74 @@ private struct NetWorthDelta: Hashable {
     let percent: Double
 }
 
-private struct DriverChange: Identifiable, Hashable {
-    let category: AssetCategory
-    let delta: Double
-    var id: AssetCategory { category }
+private struct CardHeader<Trailing: View, Subtitle: View>: View {
+    let title: String
+    @ViewBuilder var trailing: Trailing
+    @ViewBuilder var subtitle: Subtitle
+
+    init(_ title: String, @ViewBuilder trailing: () -> Trailing = { EmptyView() }, @ViewBuilder subtitle: () -> Subtitle = { EmptyView() }) {
+        self.title = title
+        self.trailing = trailing()
+        self.subtitle = subtitle()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xSmall) {
+            HStack {
+                Text(title)
+                    .font(AppFont.font(.headline, weight: .bold))
+                    .foregroundStyle(Theme.primaryText)
+                    .lineLimit(1)
+                    .layoutPriority(1)
+                Spacer()
+                trailing
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+            }
+            subtitle
+        }
+    }
+}
+
+private struct InsightRow: View {
+    let title: String
+    let value: String
+    let valueColor: Color
+
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(AppFont.font(.subheadline))
+                .foregroundStyle(Theme.secondaryText)
+            Spacer()
+            Text(value)
+                .font(AppFont.font(.subheadline, weight: .semibold))
+                .foregroundStyle(valueColor)
+        }
+    }
+}
+
+private struct PrimaryActionCard: View {
+    let onTap: () -> Void
+
+    var body: some View {
+        CardContainer {
+            VStack(alignment: .leading, spacing: Theme.Spacing.small) {
+                CardHeader("Quick update")
+
+                Text("Update a value to keep your net worth current.")
+                    .font(AppFont.font(.subheadline))
+                    .foregroundStyle(Theme.secondaryText)
+
+                Button(action: onTap) {
+                    Label("Update assets", systemImage: "plus.circle.fill")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Theme.accentAlt)
+            }
+        }
+    }
 }
 
 private struct HeroHeaderView: View {
@@ -161,75 +215,42 @@ private struct HeroHeaderView: View {
     let percentGrowth: Double
     let lastUpdated: Date?
 
-    private var delta: Double {
-        projectionValue - currentValue
-    }
-
     var body: some View {
         ZStack {
-            headerGradient
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Current Net Worth")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.8))
+            Theme.card
+            VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+                Text("Current net worth")
+                    .font(AppFont.font(.subheadline, weight: .semibold))
+                    .foregroundStyle(Theme.secondaryText)
 
                 Text(Formatters.formatINR(currentValue))
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .font(Theme.Typography.heroValue)
+                    .foregroundStyle(Theme.primaryText)
                     .contentTransition(.numericText())
 
                 if let lastUpdated {
                     Text("Updated \(lastUpdated, style: .date)")
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.7))
+                        .font(AppFont.font(.caption2))
+                        .foregroundStyle(Theme.secondaryText)
                 }
             }
-            .padding(24)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Theme.Spacing.xxLarge)
         }
-        .frame(height: 220)
-        .clipShape(.rect(cornerRadius: 28))
-        .shadow(color: .black.opacity(0.15), radius: 24, x: 0, y: 12)
+        .frame(height: Theme.Size.heroHeight)
+        .clipShape(.rect(cornerRadius: Theme.Radius.hero))
+        .shadow(
+            color: Theme.Elevation.heroShadowColor,
+            radius: Theme.Elevation.heroShadowRadius,
+            x: 0,
+            y: Theme.Elevation.heroShadowY
+        )
     }
 
-    @ViewBuilder
-    private var headerGradient: some View {
-        if #available(iOS 17, *) {
-            MeshGradient(
-                width: 3,
-                height: 3,
-                points: [
-                    .init(0, 0), .init(0.5, 0), .init(1, 0),
-                    .init(0, 0.5), .init(0.5, 0.5), .init(1, 0.5),
-                    .init(0, 1), .init(0.5, 1), .init(1, 1)
-                ],
-                colors: [
-                    Color(red: 0.05, green: 0.18, blue: 0.15),
-                    Color(red: 0.08, green: 0.28, blue: 0.20),
-                    Color(red: 0.10, green: 0.40, blue: 0.28),
-                    Color(red: 0.12, green: 0.36, blue: 0.30),
-                    Color(red: 0.18, green: 0.52, blue: 0.36),
-                    Color(red: 0.30, green: 0.64, blue: 0.48),
-                    Color(red: 0.40, green: 0.72, blue: 0.58),
-                    Color(red: 0.58, green: 0.82, blue: 0.70),
-                    Color(red: 0.78, green: 0.92, blue: 0.84)
-                ]
-            )
-        } else {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.05, green: 0.18, blue: 0.15),
-                    Color(red: 0.14, green: 0.45, blue: 0.34),
-                    Color(red: 0.55, green: 0.82, blue: 0.68)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
-    }
 }
 
 private struct ProjectionCard: View {
-    let points: [ProjectionPoint]
+    let series: [ProjectionSeriesPoint]
     let currentValue: Double
     let projectionValue: Double
     let percentGrowth: Double
@@ -240,75 +261,82 @@ private struct ProjectionCard: View {
 
     var body: some View {
         CardContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("Projection")
-                        .font(.headline)
-                        .foregroundStyle(Theme.primaryText)
-                    Spacer()
+            VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+                CardHeader("Projection") {
                     Text("1Y")
-                        .font(.caption.bold())
+                        .font(AppFont.font(.caption, weight: .bold))
                         .foregroundStyle(Theme.accentAlt)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, Theme.Spacing.small)
+                        .padding(.vertical, Theme.Spacing.xSmall)
                         .background(Theme.accentAlt.opacity(0.15), in: Capsule())
                 }
 
                 Text(Formatters.formatINR(projectionValue))
-                    .font(.title2.bold())
+                    .font(AppFont.font(.title2, weight: .bold))
                     .foregroundStyle(Theme.primaryText)
                     .contentTransition(.numericText())
 
-                HStack(spacing: 12) {
+                HStack(spacing: Theme.Spacing.small) {
                     Label("Projected change", systemImage: "chart.line.uptrend.xyaxis")
-                        .font(.caption)
+                        .font(AppFont.font(.caption))
                         .foregroundStyle(Theme.secondaryText)
                     Spacer()
                     GrowthPill(percent: percentGrowth, delta: delta)
                 }
 
                 if #available(iOS 16, *) {
-                    Chart(points) { point in
-                        LineMark(
-                            x: .value("Month", point.month),
-                            y: .value("Value", point.value)
-                        )
-                        .interpolationMethod(.catmullRom)
-                        AreaMark(
-                            x: .value("Month", point.month),
-                            y: .value("Value", point.value)
-                        )
-                        .opacity(0.12)
-                    }
-                    .chartXAxis {
-                        AxisMarks(values: .automatic) { _ in
-                            AxisGridLine()
-                                .foregroundStyle(.clear)
-                            AxisTick()
-                                .foregroundStyle(.clear)
-                            AxisValueLabel()
-                                .foregroundStyle(.clear)
+                    if series.isEmpty {
+                        Text("Add assets to see projections.")
+                            .font(AppFont.font(.subheadline))
+                            .foregroundStyle(Theme.secondaryText)
+                    } else {
+                        Chart(series) { point in
+                            LineMark(
+                                x: .value("Month", point.month),
+                                y: .value("Change", point.percent)
+                            )
+                            .foregroundStyle(by: .value("Series", point.series.rawValue))
+                            .interpolationMethod(.catmullRom)
                         }
-                    }
-                    .chartYAxis {
-                        AxisMarks(values: .automatic) { _ in
-                            AxisGridLine()
-                                .foregroundStyle(.clear)
-                            AxisTick()
-                                .foregroundStyle(.clear)
-                            AxisValueLabel()
-                                .foregroundStyle(.clear)
+                        .chartForegroundStyleScale([
+                            ProjectionSeries.growth.rawValue: Theme.positive,
+                            ProjectionSeries.decline.rawValue: Theme.negative
+                        ])
+                        .chartLegend(position: .bottom, alignment: .leading)
+                        .chartXAxis {
+                            AxisMarks(values: .automatic(desiredCount: 3)) { _ in
+                                AxisTick()
+                                    .foregroundStyle(Theme.divider.opacity(0.4))
+                                AxisValueLabel()
+                                    .font(AppFont.font(.caption2))
+                                    .foregroundStyle(Theme.secondaryText)
+                            }
                         }
+                        .chartYAxis {
+                            AxisMarks(values: .automatic(desiredCount: 3)) { value in
+                                AxisGridLine()
+                                    .foregroundStyle(Theme.divider.opacity(0.2))
+                                AxisTick()
+                                    .foregroundStyle(Theme.divider.opacity(0.4))
+                                AxisValueLabel {
+                                    if let yValue = value.as(Double.self) {
+                                        Text(yValue, format: .percent.precision(.fractionLength(0)))
+                                    }
+                                }
+                                .font(AppFont.font(.caption2))
+                                .foregroundStyle(Theme.secondaryText)
+                            }
+                        }
+                        .frame(height: Theme.Size.chartSmall)
                     }
-                    .frame(height: 110)
                 } else {
                     Text("Projection chart requires iOS 16+")
-                        .font(.footnote)
+                        .font(AppFont.font(.footnote))
                         .foregroundStyle(Theme.secondaryText)
                 }
 
                 Text("Assumptions only. Actuals can vary.")
-                    .font(.caption2)
+                    .font(AppFont.font(.caption2))
                     .foregroundStyle(Theme.secondaryText)
             }
         }
@@ -320,60 +348,46 @@ private struct GrowthPill: View {
     let delta: Double
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: Theme.Spacing.tight) {
             Image(systemName: delta >= 0 ? "arrow.up.right" : "arrow.down.right")
-                .font(.caption2.bold())
+                .font(AppFont.font(.caption2, weight: .bold))
             Text(percent, format: .percent.precision(.fractionLength(1)))
-                .font(.caption.bold())
+                .font(AppFont.font(.caption, weight: .bold))
         }
         .foregroundStyle(delta >= 0 ? Theme.positive : Theme.negative)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 4)
+        .padding(.horizontal, Theme.Spacing.small)
+        .padding(.vertical, Theme.Spacing.xSmall)
         .background((delta >= 0 ? Theme.positive : Theme.negative).opacity(0.12), in: Capsule())
     }
 }
 
 private struct InsightsCard: View {
     let delta: NetWorthDelta?
-    let topShare: Double?
 
     var body: some View {
         CardContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Insights")
-                    .font(.headline)
-                    .foregroundStyle(Theme.primaryText)
+            VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+                CardHeader("Latest change")
 
-                HStack {
-                    Text("Since last update")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.secondaryText)
-                    Spacer()
-                    if let delta {
-                        Text(Formatters.formatINR(delta.amount))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(delta.amount >= 0 ? Theme.positive : Theme.negative)
-                    } else {
-                        Text("—")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.secondaryText)
-                    }
-                }
+                if let delta {
+                    InsightRow(
+                        title: "Net worth change",
+                        value: Formatters.formatINR(delta.amount),
+                        valueColor: delta.amount >= 0 ? Theme.positive : Theme.negative
+                    )
+                    InsightRow(
+                        title: "Percent change",
+                        value: delta.percent.formatted(.percent.precision(.fractionLength(1))),
+                        valueColor: Theme.primaryText
+                    )
 
-                HStack {
-                    Text("Top 3 categories share")
-                        .font(.subheadline)
+                    Text("Compared to your previous update.")
+                        .font(AppFont.font(.caption))
                         .foregroundStyle(Theme.secondaryText)
-                    Spacer()
-                    if let topShare {
-                        Text(topShare, format: .percent.precision(.fractionLength(0)))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.primaryText)
-                    } else {
-                        Text("—")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.secondaryText)
-                    }
+                } else {
+                    Text("No changes yet.")
+                        .font(AppFont.font(.subheadline))
+                        .foregroundStyle(Theme.secondaryText)
                 }
             }
         }
@@ -383,87 +397,82 @@ private struct InsightsCard: View {
 private struct TrendCard: View {
     let snapshots: [NetWorthSnapshot]
 
+    private struct TrendPoint: Identifiable {
+        let index: Int
+        let display: Double
+        let isPercent: Bool
+        var id: Int { index }
+    }
+
     var body: some View {
         CardContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Net Worth Trend")
-                    .font(.headline)
-                    .foregroundStyle(Theme.primaryText)
+            VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+                CardHeader("Net Worth Trend")
 
                 if snapshots.count < 2 {
-                    Text("Make another update to see trends.")
-                        .font(.subheadline)
+                    Text("Update again to see trends.")
+                        .font(AppFont.font(.subheadline))
                         .foregroundStyle(Theme.secondaryText)
                 } else if #available(iOS 16, *) {
-                    Chart(snapshots) { snapshot in
+                    let ordered = snapshots.sorted { $0.date < $1.date }
+                    let base = ordered.first?.netWorth ?? 0
+                    let usePercent = base > 0
+                    let points = ordered.enumerated().map { index, snapshot in
+                        let value = usePercent ? (snapshot.netWorth - base) / base : snapshot.netWorth
+                        return TrendPoint(index: index + 1, display: value, isPercent: usePercent)
+                    }
+
+                    Chart(points) { point in
                         LineMark(
-                            x: .value("Date", snapshot.date),
-                            y: .value("Net Worth", snapshot.netWorth)
+                            x: .value("Update", point.index),
+                            y: .value("Change", point.display)
                         )
+                        .foregroundStyle(Theme.accentAlt)
                         .interpolationMethod(.catmullRom)
                         AreaMark(
-                            x: .value("Date", snapshot.date),
-                            y: .value("Net Worth", snapshot.netWorth)
+                            x: .value("Update", point.index),
+                            y: .value("Change", point.display)
                         )
+                        .foregroundStyle(Theme.accentAlt)
                         .opacity(0.12)
                     }
                     .chartXAxis {
-                        AxisMarks(values: .automatic) { _ in
-                            AxisGridLine()
-                                .foregroundStyle(.clear)
+                        AxisMarks(values: .automatic(desiredCount: 3)) { value in
                             AxisTick()
-                                .foregroundStyle(.clear)
-                            AxisValueLabel()
-                                .foregroundStyle(.clear)
+                                .foregroundStyle(Theme.divider.opacity(0.4))
+                            AxisValueLabel {
+                                if let index = value.as(Int.self) {
+                                    Text("\(index)")
+                                }
+                            }
+                            .font(AppFont.font(.caption2))
+                            .foregroundStyle(Theme.secondaryText)
                         }
                     }
                     .chartYAxis {
-                        AxisMarks(values: .automatic) { _ in
+                        AxisMarks(values: .automatic(desiredCount: 3)) { value in
                             AxisGridLine()
-                                .foregroundStyle(.clear)
+                                .foregroundStyle(Theme.divider.opacity(0.2))
                             AxisTick()
-                                .foregroundStyle(.clear)
-                            AxisValueLabel()
-                                .foregroundStyle(.clear)
+                                .foregroundStyle(Theme.divider.opacity(0.4))
+                            AxisValueLabel {
+                                if let yValue = value.as(Double.self) {
+                                    if usePercent {
+                                        Text(yValue, format: .percent.precision(.fractionLength(0)))
+                                    } else {
+                                        Text(Formatters.formatINRCompact(yValue))
+                                    }
+                                }
+                            }
+                            .font(AppFont.font(.caption2))
+                            .foregroundStyle(Theme.secondaryText)
                         }
                     }
-                    .frame(height: 120)
+                    .frame(height: Theme.Size.chartMedium)
                 } else {
                     Text("Trend chart requires iOS 16+")
-                        .font(.footnote)
+                        .font(AppFont.font(.footnote))
                         .foregroundStyle(Theme.secondaryText)
-                }
-            }
-        }
-    }
-}
-
-private struct DriversCard: View {
-    let changes: [DriverChange]
-
-    var body: some View {
-        CardContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Drivers")
-                    .font(.headline)
-                    .foregroundStyle(Theme.primaryText)
-
-                if changes.isEmpty {
-                    Text("No changes yet.")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.secondaryText)
-                } else {
-                    ForEach(Array(changes.prefix(3))) { change in
-                        HStack {
-                            Text(change.category.definition.name)
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.primaryText)
-                            Spacer()
-                            Text(Formatters.formatINR(change.delta))
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(change.delta >= 0 ? Theme.positive : Theme.negative)
-                        }
-                    }
                 }
             }
         }
@@ -476,22 +485,18 @@ private struct CategoryPreviewCard: View {
 
     var body: some View {
         CardContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("Categories")
-                        .font(.headline)
-                        .foregroundStyle(Theme.primaryText)
-                    Spacer()
+            VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+                CardHeader("Categories") {
                     Button("See all") {
                         onSeeAll()
                     }
-                    .font(.subheadline)
+                    .font(AppFont.font(.subheadline))
                     .foregroundStyle(Theme.accentAlt)
                 }
 
                 if categories.isEmpty {
                     Text("Add assets to see category totals.")
-                        .font(.subheadline)
+                        .font(AppFont.font(.subheadline))
                         .foregroundStyle(Theme.secondaryText)
                 } else {
                     ForEach(categories) { summary in
@@ -508,14 +513,12 @@ private struct TopAssetsCard: View {
 
     var body: some View {
         CardContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Top Assets")
-                    .font(.headline)
-                    .foregroundStyle(Theme.primaryText)
+            VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+                CardHeader("Top Assets")
 
                 if assets.isEmpty {
                     Text("Add your first asset to get started.")
-                        .font(.subheadline)
+                        .font(AppFont.font(.subheadline))
                         .foregroundStyle(Theme.secondaryText)
                 } else {
                     ForEach(assets) { asset in

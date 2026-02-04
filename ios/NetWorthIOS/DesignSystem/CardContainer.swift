@@ -6,14 +6,19 @@ struct CardContainer<Content: View>: View {
     var body: some View {
         content
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
+            .padding(Theme.Spacing.cardPadding)
             .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
                     .fill(Theme.card)
-                    .shadow(color: Theme.cardShadow, radius: 16, x: 0, y: 8)
+                    .shadow(
+                        color: Theme.Elevation.cardShadowColor,
+                        radius: Theme.Elevation.cardShadowRadius,
+                        x: 0,
+                        y: Theme.Elevation.cardShadowY
+                    )
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
                     .stroke(Theme.divider.opacity(0.2), lineWidth: 1)
             )
     }

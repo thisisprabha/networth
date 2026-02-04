@@ -21,9 +21,7 @@ struct RootView: View {
             }
 
             Tab("Assets", systemImage: "tray.full", value: .assets) {
-                NavigationStack {
-                    AssetsListView(store: assetStore)
-                }
+                AssetsListView(store: assetStore)
             }
 
             Tab("Settings", systemImage: "gearshape", value: .settings) {
@@ -33,7 +31,7 @@ struct RootView: View {
             }
         }
         .background(Theme.background)
-        .ignoresSafeArea()
+        .font(AppFont.font(.body))
         .tint(Theme.accentAlt)
         .toolbarBackground(Theme.background, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)

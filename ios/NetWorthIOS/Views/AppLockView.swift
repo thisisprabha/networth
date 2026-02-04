@@ -9,32 +9,32 @@ struct AppLockView: View {
                 .ignoresSafeArea()
 
             GlassCard(isInteractive: true) {
-                VStack(spacing: 16) {
+                VStack(spacing: Theme.Spacing.large) {
                     Image(systemName: "lock.fill")
-                        .font(.system(size: 36, weight: .bold))
+                        .font(Theme.Typography.lockIcon)
                         .foregroundStyle(Theme.primaryText)
 
                     Text("Unlock NetWorth")
-                        .font(.title3.bold())
+                        .font(AppFont.font(.title3, weight: .bold))
                         .foregroundStyle(Theme.primaryText)
 
                     Text("Use Face ID or Touch ID to continue.")
-                        .font(.subheadline)
+                        .font(AppFont.font(.subheadline))
                         .foregroundStyle(Theme.secondaryText)
 
                     Button {
                         Task { await store.unlock() }
                     } label: {
                         Text("Unlock")
-                            .font(.headline)
+                            .font(AppFont.font(.headline, weight: .bold))
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                 }
-                .padding()
-                .frame(maxWidth: 320)
+                .padding(.vertical, Theme.Spacing.small)
+                .frame(maxWidth: Theme.Size.appLockCardMaxWidth)
             }
-            .padding()
+            .padding(Theme.Spacing.large)
         }
     }
 }

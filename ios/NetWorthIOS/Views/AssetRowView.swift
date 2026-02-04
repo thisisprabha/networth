@@ -5,32 +5,29 @@ struct AssetRowView: View {
     let value: Double
 
     var body: some View {
-        HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(asset.category.definition.color.opacity(0.15))
-                Image(systemName: asset.category.definition.symbolName)
-                    .foregroundStyle(asset.category.definition.color)
-            }
-            .frame(width: 36, height: 36)
+        let isLiability = asset.category.definition.isLiability
+        let valueText = (isLiability ? "-" : "") + Formatters.formatINR(value)
 
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(spacing: Theme.Spacing.medium) {
+            RowIcon(systemName: asset.category.definition.symbolName, color: asset.category.definition.color)
+
+            VStack(alignment: .leading, spacing: Theme.Spacing.xSmall) {
                 Text(asset.name)
-                    .font(.headline)
+                    .font(AppFont.font(.subheadline, weight: .semibold))
                     .foregroundStyle(Theme.primaryText)
                 if let detail = asset.textValue("assetName"), !detail.isEmpty {
                     Text(detail)
-                        .font(.subheadline)
+                        .font(AppFont.font(.caption))
                         .foregroundStyle(Theme.secondaryText)
                 }
             }
 
             Spacer()
 
-            Text(Formatters.formatINR(value))
-                .font(.subheadline)
-                .foregroundStyle(Theme.primaryText)
+            Text(valueText)
+                .font(AppFont.font(.subheadline, weight: .semibold))
+                .foregroundStyle(isLiability ? Theme.negative : Theme.primaryText)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, Theme.Spacing.xSmall)
     }
 }

@@ -19,28 +19,28 @@ struct NetWorthWidgetView: View {
     private var content: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Net Worth")
-                .font(.caption)
+                .font(WidgetTheme.titleFont)
                 .foregroundStyle(.white.opacity(0.8))
 
             Text(formatINR(entry.state.netWorth))
-                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .font(WidgetTheme.valueFont)
                 .foregroundStyle(.white)
                 .lineLimit(1)
 
             if let delta = entry.state.deltaPercent {
                 Text(delta, format: .percent.precision(.fractionLength(1)))
-                    .font(.caption.bold())
+                    .font(WidgetTheme.deltaFont)
                     .foregroundStyle(.white)
             } else {
                 Text("Update to see change")
-                    .font(.caption2)
+                    .font(WidgetTheme.footnoteFont)
                     .foregroundStyle(.white.opacity(0.7))
             }
 
             Spacer()
 
             Text(entry.state.lastUpdated, style: .date)
-                .font(.caption2)
+                .font(WidgetTheme.footnoteFont)
                 .foregroundStyle(.white.opacity(0.7))
         }
         .padding()
@@ -48,11 +48,7 @@ struct NetWorthWidgetView: View {
 
     private var backgroundGradient: some View {
         LinearGradient(
-            colors: [
-                Color(red: 0.05, green: 0.18, blue: 0.15),
-                Color(red: 0.18, green: 0.52, blue: 0.36),
-                Color(red: 0.78, green: 0.92, blue: 0.84)
-            ],
+            colors: WidgetTheme.gradientColors,
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )

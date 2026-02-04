@@ -16,37 +16,51 @@ struct CategoryDetailView: View {
         assets.reduce(0) { $0 + CalculationsService.assetValue($1) }
     }
 
+    private var totalDisplay: String {
+        let value = Formatters.formatINR(totalValue)
+        return category.definition.isLiability ? "-" + value : value
+    }
+
     var body: some View {
         List {
             Section {
                 HStack {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: Theme.Spacing.xSmall) {
                         Text("Total")
-                            .font(.caption)
+                            .font(AppFont.font(.caption))
                             .foregroundStyle(Theme.secondaryText)
-                        Text(Formatters.formatINR(totalValue))
-                            .font(.title3.bold())
-                            .foregroundStyle(Theme.primaryText)
+                        Text(totalDisplay)
+                            .font(AppFont.font(.title3, weight: .bold))
+                            .foregroundStyle(category.definition.isLiability ? Theme.negative : Theme.primaryText)
+                            .contentTransition(.numericText())
                         if category.definition.isLiability {
                             Text("Debt reduces net worth")
-                                .font(.caption2)
+                                .font(AppFont.font(.caption2))
                                 .foregroundStyle(Theme.secondaryText)
                         } else if !category.definition.includesInNetWorth {
                             Text("Coverage only (not part of net worth)")
-                                .font(.caption2)
+                                .font(AppFont.font(.caption2))
                                 .foregroundStyle(Theme.secondaryText)
                         }
                     }
                     Spacer()
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, Theme.Spacing.xSmall)
             }
 
             Section("Assets") {
                 if assets.isEmpty {
-                    Text("Add assets in this category.")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.secondaryText)
+                    ContentUnavailableView {
+                        Label("No assets yet", systemImage: "tray")
+                    } description: {
+                        Text("Add assets in this category.")
+                    } actions: {
+                        Button("Add asset") {
+                            activeSheet = AssetSheet(asset: nil, initialCategory: category)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Theme.accentAlt)
+                    }
                 } else {
                     ForEach(assets) { asset in
                         Button {
@@ -57,6 +71,7 @@ struct CategoryDetailView: View {
                         .buttonStyle(.plain)
                         .swipeActions {
                             Button(role: .destructive) {
+                                Haptics.warning()
                                 store.delete(asset)
                             } label: {
                                 Label("Delete", systemImage: "trash")

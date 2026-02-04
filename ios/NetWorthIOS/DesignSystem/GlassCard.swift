@@ -7,13 +7,13 @@ struct GlassCard<Content: View>: View {
     var body: some View {
         if #available(iOS 26, *) {
             content
-                .padding()
-                .background(Theme.card, in: .rect(cornerRadius: 20))
-                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: .rect(cornerRadius: 20))
+                .padding(Theme.Spacing.cardPadding)
+                .background(Theme.card, in: .rect(cornerRadius: Theme.Radius.card))
+                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: .rect(cornerRadius: Theme.Radius.card))
         } else {
             content
-                .padding()
-                .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
+                .padding(Theme.Spacing.cardPadding)
+                .background(.ultraThinMaterial, in: .rect(cornerRadius: Theme.Radius.card))
         }
     }
 }

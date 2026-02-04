@@ -11,24 +11,56 @@ struct SettingsView: View {
     @State private var alertMessage: String?
 
     var body: some View {
-        Form {
-            Section("Security") {
-                Toggle("App Lock", isOn: appLockBinding)
-            }
+        ZStack {
+            Theme.background
+                .ignoresSafeArea()
 
-            Section("Reminders") {
-                Toggle("Monthly check‑in reminder", isOn: monthlyReminderBinding)
-                    .tint(Theme.accentAlt)
-            }
+            Form {
+                Section {
+                    Toggle("App Lock", isOn: appLockBinding)
+                        .tint(Theme.accentAlt)
+                } header: {
+                    Text("Security")
+                        .font(AppFont.font(.subheadline, weight: .semibold))
+                        .foregroundStyle(Theme.primaryText)
+                        .textCase(nil)
+                } footer: {
+                    Text("Locks the app when you reopen it.")
+                        .font(AppFont.font(.caption2))
+                        .foregroundStyle(Theme.secondaryText)
+                }
 
-            Section("Backup & Restore") {
-                Button("Export CSV") { exportCSV() }
-                Button("Import CSV") { isImporting = true }
+                Section {
+                    Toggle("Monthly check‑in reminder", isOn: monthlyReminderBinding)
+                        .tint(Theme.accentAlt)
+                } header: {
+                    Text("Reminders")
+                        .font(AppFont.font(.subheadline, weight: .semibold))
+                        .foregroundStyle(Theme.primaryText)
+                        .textCase(nil)
+                } footer: {
+                    Text("A gentle nudge to update your net worth each month.")
+                        .font(AppFont.font(.caption2))
+                        .foregroundStyle(Theme.secondaryText)
+                }
+
+                Section {
+                    Button("Export CSV") { exportCSV() }
+                    Button("Import CSV") { isImporting = true }
+                } header: {
+                    Text("Backup & Restore")
+                        .font(AppFont.font(.subheadline, weight: .semibold))
+                        .foregroundStyle(Theme.primaryText)
+                        .textCase(nil)
+                } footer: {
+                    Text("CSV files stay on your device unless you share them.")
+                        .font(AppFont.font(.caption2))
+                        .foregroundStyle(Theme.secondaryText)
+                }
             }
+            .navigationTitle("Settings")
+            .scrollContentBackground(.hidden)
         }
-        .navigationTitle("Settings")
-        .scrollContentBackground(.hidden)
-        .background(Theme.background)
         .fileExporter(
             isPresented: $isExporting,
             document: exportDocument,
@@ -107,8 +139,10 @@ struct SettingsView: View {
             }
             let imported = try CSVService.importCSV(content)
             store.merge(imported)
+            Haptics.success()
             alertMessage = "Imported \(imported.count) assets."
         } catch {
+            Haptics.error()
             alertMessage = "Import failed."
         }
     }

@@ -99,6 +99,38 @@ enum CalculationsService {
         return points
     }
 
+    static func projectionSeries(assets: [Asset], settings: Settings, months: Int = 12) -> [ProjectionSeriesPoint] {
+        let projectedAssets = assets.filter { $0.category.definition.includesInNetWorth && !$0.category.definition.isLiability }
+        let grouped = projectedAssets.reduce(into: [ProjectionSeries: [Asset]]()) { result, asset in
+            let rate = growthRate(for: asset.category, settings: settings)
+            let series: ProjectionSeries = rate >= 0 ? .growth : .decline
+            result[series, default: []].append(asset)
+        }
+
+        func baseValue(for assets: [Asset]) -> Double {
+            assets.reduce(0) { $0 + assetValue($1) }
+        }
+
+        var points: [ProjectionSeriesPoint] = []
+        for (series, assets) in grouped {
+            let base = baseValue(for: assets)
+            guard base > 0 else { continue }
+            for month in 0...months {
+                var total: Double = 0
+                for asset in assets {
+                    let currentValue = assetValue(asset)
+                    let rate = growthRate(for: asset.category, settings: settings)
+                    let monthly = rate / 12 / 100
+                    let projected = currentValue * pow(1 + monthly, Double(month))
+                    total += projected
+                }
+                let percent = (total - base) / base
+                points.append(ProjectionSeriesPoint(month: month, percent: percent, series: series))
+            }
+        }
+        return points
+    }
+
     static func oneYearProjection(assets: [Asset], settings: Settings) -> Double {
         projection(assets: assets, settings: settings, months: 12).last?.value ?? 0
     }

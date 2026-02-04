@@ -4,40 +4,36 @@ struct CategoryRowView: View {
     let summary: CategorySummary
 
     var body: some View {
-        HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(summary.category.definition.color.opacity(0.15))
-                Image(systemName: summary.category.definition.symbolName)
-                    .foregroundStyle(summary.category.definition.color)
-            }
-            .frame(width: 36, height: 36)
+        HStack(spacing: Theme.Spacing.medium) {
+            RowIcon(systemName: summary.category.definition.symbolName, color: summary.category.definition.color)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xSmall) {
                 Text(summary.category.definition.name)
-                    .font(.subheadline.weight(.semibold))
+                    .font(AppFont.font(.subheadline, weight: .semibold))
                     .foregroundStyle(Theme.primaryText)
                 if summary.category.definition.isLiability {
                     Text("Debt")
-                        .font(.caption)
+                        .font(AppFont.font(.caption))
                         .foregroundStyle(Theme.secondaryText)
                 } else if let percentage = summary.percentage {
                     Text(percentage, format: .percent.precision(.fractionLength(0)))
-                        .font(.caption)
+                        .font(AppFont.font(.caption))
                         .foregroundStyle(Theme.secondaryText)
                 } else {
                     Text("Coverage")
-                        .font(.caption)
+                        .font(AppFont.font(.caption))
                         .foregroundStyle(Theme.secondaryText)
                 }
             }
 
             Spacer()
 
-            Text(Formatters.formatINR(summary.total))
-                .font(.subheadline)
-                .foregroundStyle(Theme.primaryText)
+            let isLiability = summary.category.definition.isLiability
+            let valueText = (isLiability ? "-" : "") + Formatters.formatINR(summary.total)
+            Text(valueText)
+                .font(AppFont.font(.subheadline, weight: .semibold))
+                .foregroundStyle(isLiability ? Theme.negative : Theme.primaryText)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, Theme.Spacing.xSmall)
     }
 }

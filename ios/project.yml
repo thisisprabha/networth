@@ -43,6 +43,9 @@ targets:
       properties:
         NSFaceIDUsageDescription: "Unlock your NetWorth data."
         UILaunchStoryboardName: "LaunchScreen"
+        UIAppFonts:
+          - iAWriterQuattroS-Regular.ttf
+          - iAWriterQuattroS-Bold.ttf
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft

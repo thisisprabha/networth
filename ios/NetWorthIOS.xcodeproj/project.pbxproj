@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13BCED82C087D9735C029755 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CBA4DEEE14250F1EAF1EEA /* CardContainer.swift */; };
+		13FC130E9101850ED88DD04E /* AppFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1906A54A543B8A804EB260A5 /* AppFont.swift */; };
+		15AE3A6CB76F7E647AAB9965 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD987590DDFA472D8B50EB /* Haptics.swift */; };
 		2668EF2A0E3C077375B879C3 /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA49189D74360A26821D4867 /* GlassCard.swift */; };
 		34E6891540A2D0596EBA10FF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DBCAB4E0D7EEBECD2BA10C /* Theme.swift */; };
 		3DA905491C596A7522227723 /* NetWorthWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -22,6 +24,7 @@
 		6CA15898A983F06AB761EBD6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5BE78A698C382DD291E6D0 /* RootView.swift */; };
 		6FD3CB175B364AB172E40DBD /* AssetCategoryDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1534DA90C66EC3A3A61C9814 /* AssetCategoryDefinition.swift */; };
 		7CABE538D7381E9130C189DF /* AssetFieldDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE172A788B1B4DBF4EFEF294 /* AssetFieldDefinition.swift */; };
+		7E1AD7D2E7AA415FD885F39B /* iAWriterQuattroS-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 924C4ED1C98CC75310C004BD /* iAWriterQuattroS-Bold.ttf */; };
 		8373D5C6E7E718499D626D78 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E6D48DC91FCCAB0E7F3CF4 /* Formatters.swift */; };
 		83BD6AE2B9C5BBB6EE634150 /* AssetFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D854D1C339DE176AFCA166BE /* AssetFormView.swift */; };
 		8C234E48C34277F0E2345C7C /* NetWorthSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998712A014AE496CC52A5CFA /* NetWorthSnapshot.swift */; };
@@ -37,11 +40,14 @@
 		B4FDBEA80C15A1F4E733DA4F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8386F17B5374B4957A796A4F /* SettingsView.swift */; };
 		BA0153816CEF3464816A5FD5 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2302C5389B53F05DACBC5227 /* AppLockView.swift */; };
 		BC158D0789D707AA4B878A45 /* AssetsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14B52FFD3E01F71D903098A /* AssetsListView.swift */; };
+		CCC56117D5B2250032987453 /* RowIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639449ECD483977E4F544BE2 /* RowIcon.swift */; };
 		CE646195479653D18D78DC11 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F93FF6F8FFA3B5382C30A3 /* LaunchScreen.storyboard */; };
 		D22032005E5577A49854B567 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED24E1F3FE13266191CF1047 /* CategoryDetailView.swift */; };
 		D5F64044A0EB768028E8040B /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434D94C4A44A9FB3C3CA5E94 /* Asset.swift */; };
 		DEC61DDDD95B5145AF8DCE58 /* NetWorthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C8327D56696B96F7EC5A71 /* NetWorthApp.swift */; };
+		E095FF1FDBE4E69829D351BC /* WidgetTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EAB58EC9D7280C0A8F441F5 /* WidgetTheme.swift */; };
 		E22136574663386309DC5603 /* ProjectionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B0DDD1610711C2A7F09D58 /* ProjectionPoint.swift */; };
+		E5B121CB178E1594AA14C646 /* iAWriterQuattroS-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D320A173B09CB7DC754E6ED6 /* iAWriterQuattroS-Regular.ttf */; };
 		ED4811CDF83D139EBDB6D22E /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2A57A7BE30D7FC2998C2DD /* NotificationService.swift */; };
 		EDEFC4E531782C0836118A15 /* NetWorthWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEE26EA1FDB1E523D951013 /* NetWorthWidgetView.swift */; };
 		EE3F8BBF9619C5E43A43BDD2 /* AssetCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56C6D93CBED73076F69159B /* AssetCategory.swift */; };
@@ -79,6 +85,7 @@
 		098B91FAAA38CEFEA4A2F514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11B0DDD1610711C2A7F09D58 /* ProjectionPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectionPoint.swift; sourceTree = "<group>"; };
 		1534DA90C66EC3A3A61C9814 /* AssetCategoryDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCategoryDefinition.swift; sourceTree = "<group>"; };
+		1906A54A543B8A804EB260A5 /* AppFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFont.swift; sourceTree = "<group>"; };
 		1C29F34F9036501DBD1746E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1ED982FAD75778C8134F9158 /* PersistenceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
 		21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NetWorthWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,6 +94,7 @@
 		3F28EC13B25BDEFD8B747156 /* AssetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetStore.swift; sourceTree = "<group>"; };
 		434D94C4A44A9FB3C3CA5E94 /* Asset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
 		6320DAD21535D174A9952350 /* CategoryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRowView.swift; sourceTree = "<group>"; };
+		639449ECD483977E4F544BE2 /* RowIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowIcon.swift; sourceTree = "<group>"; };
 		6D2A57A7BE30D7FC2998C2DD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		75DBCAB4E0D7EEBECD2BA10C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7DA0E1EABAE875018DB52F24 /* CalculationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationsService.swift; sourceTree = "<group>"; };
@@ -98,7 +106,10 @@
 		84CBA4DEEE14250F1EAF1EEA /* CardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainer.swift; sourceTree = "<group>"; };
 		8AEE26EA1FDB1E523D951013 /* NetWorthWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthWidgetView.swift; sourceTree = "<group>"; };
 		8E9D021D0BDB6D58753892DD /* CryptoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoService.swift; sourceTree = "<group>"; };
+		8EAB58EC9D7280C0A8F441F5 /* WidgetTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTheme.swift; sourceTree = "<group>"; };
+		924C4ED1C98CC75310C004BD /* iAWriterQuattroS-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iAWriterQuattroS-Bold.ttf"; sourceTree = "<group>"; };
 		927A0EAE08A3C6967AB7E874 /* CategorySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySummary.swift; sourceTree = "<group>"; };
+		95CD987590DDFA472D8B50EB /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		998712A014AE496CC52A5CFA /* NetWorthSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthSnapshot.swift; sourceTree = "<group>"; };
 		AA49189D74360A26821D4867 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
 		AC819894E9A561F17AF14AE5 /* WidgetConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConstants.swift; sourceTree = "<group>"; };
@@ -109,6 +120,7 @@
 		C7DCC085FBE0161E69263283 /* AppLockStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockStore.swift; sourceTree = "<group>"; };
 		C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetWorthIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC5BE78A698C382DD291E6D0 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		D320A173B09CB7DC754E6ED6 /* iAWriterQuattroS-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iAWriterQuattroS-Regular.ttf"; sourceTree = "<group>"; };
 		D854D1C339DE176AFCA166BE /* AssetFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormView.swift; sourceTree = "<group>"; };
 		DA6FCFFDCBCB3BDBF07A0DA2 /* NetWorthWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthWidget.swift; sourceTree = "<group>"; };
 		DE8DF534B4AB3D2A12C5D634 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -129,6 +141,7 @@
 				8E9D021D0BDB6D58753892DD /* CryptoService.swift */,
 				82A92F5B28CD23E56898A24D /* CSVService.swift */,
 				82E6D48DC91FCCAB0E7F3CF4 /* Formatters.swift */,
+				95CD987590DDFA472D8B50EB /* Haptics.swift */,
 				039D79CD10B1363C9ED5C022 /* KeychainService.swift */,
 				6D2A57A7BE30D7FC2998C2DD /* NotificationService.swift */,
 				1ED982FAD75778C8134F9158 /* PersistenceStore.swift */,
@@ -163,6 +176,7 @@
 				DA6FCFFDCBCB3BDBF07A0DA2 /* NetWorthWidget.swift */,
 				8AEE26EA1FDB1E523D951013 /* NetWorthWidgetView.swift */,
 				AC819894E9A561F17AF14AE5 /* WidgetConstants.swift */,
+				8EAB58EC9D7280C0A8F441F5 /* WidgetTheme.swift */,
 			);
 			path = NetWorthWidget;
 			sourceTree = "<group>";
@@ -170,9 +184,11 @@
 		BA8DAAD45EFC172A4898851D /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				1906A54A543B8A804EB260A5 /* AppFont.swift */,
 				84CBA4DEEE14250F1EAF1EEA /* CardContainer.swift */,
 				AA49189D74360A26821D4867 /* GlassCard.swift */,
 				32CD8E440D6B6F83E58DB399 /* GlassStack.swift */,
+				639449ECD483977E4F544BE2 /* RowIcon.swift */,
 				75DBCAB4E0D7EEBECD2BA10C /* Theme.swift */,
 			);
 			path = DesignSystem;
@@ -220,6 +236,15 @@
 			);
 			sourceTree = "<group>";
 		};
+		EB3F56760C011C0545D0B669 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				924C4ED1C98CC75310C004BD /* iAWriterQuattroS-Bold.ttf */,
+				D320A173B09CB7DC754E6ED6 /* iAWriterQuattroS-Regular.ttf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		F5A826399A611B09A47BFBDB /* NetWorthIOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +255,7 @@
 				BF4FA202691D5DB4B46F5A2C /* NetWorthIOS.entitlements */,
 				BA8DAAD45EFC172A4898851D /* DesignSystem */,
 				C382DAC3057DF5855C02CE19 /* Models */,
+				EB3F56760C011C0545D0B669 /* Resources */,
 				7304A904F99AB2C9587DCDCD /* Services */,
 				864D71522465DB1BF277C2BA /* Stores */,
 				C33CAF767ED8812038998E84 /* Views */,
@@ -312,6 +338,8 @@
 			files = (
 				8C88174FB8E37B3B912AC3FE /* Assets.xcassets in Resources */,
 				CE646195479653D18D78DC11 /* LaunchScreen.storyboard in Resources */,
+				7E1AD7D2E7AA415FD885F39B /* iAWriterQuattroS-Bold.ttf in Resources */,
+				E5B121CB178E1594AA14C646 /* iAWriterQuattroS-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +350,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13FC130E9101850ED88DD04E /* AppFont.swift in Sources */,
 				A05827687FA89D37DFE38244 /* AppLockStore.swift in Sources */,
 				BA0153816CEF3464816A5FD5 /* AppLockView.swift in Sources */,
 				D5F64044A0EB768028E8040B /* Asset.swift in Sources */,
@@ -344,6 +373,7 @@
 				8373D5C6E7E718499D626D78 /* Formatters.swift in Sources */,
 				2668EF2A0E3C077375B879C3 /* GlassCard.swift in Sources */,
 				6625D0E52B3F89B5EBE8B110 /* GlassStack.swift in Sources */,
+				15AE3A6CB76F7E647AAB9965 /* Haptics.swift in Sources */,
 				675DE6B5156594194230AB12 /* HomeView.swift in Sources */,
 				97FF65771439AB489D90BF03 /* KeychainService.swift in Sources */,
 				DEC61DDDD95B5145AF8DCE58 /* NetWorthApp.swift in Sources */,
@@ -352,6 +382,7 @@
 				554AAFA48B23249D4E89DC2F /* PersistenceStore.swift in Sources */,
 				E22136574663386309DC5603 /* ProjectionPoint.swift in Sources */,
 				6CA15898A983F06AB761EBD6 /* RootView.swift in Sources */,
+				CCC56117D5B2250032987453 /* RowIcon.swift in Sources */,
 				EE6E9FC1501167497E94DBB6 /* Settings.swift in Sources */,
 				B4FDBEA80C15A1F4E733DA4F /* SettingsView.swift in Sources */,
 				34E6891540A2D0596EBA10FF /* Theme.swift in Sources */,
@@ -366,6 +397,7 @@
 				466BDE489E57A39EB835FD37 /* NetWorthWidget.swift in Sources */,
 				EDEFC4E531782C0836118A15 /* NetWorthWidgetView.swift in Sources */,
 				69E0B99F4ACDF98AB79B922C /* WidgetConstants.swift in Sources */,
+				E095FF1FDBE4E69829D351BC /* WidgetTheme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
