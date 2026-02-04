@@ -7,6 +7,30 @@ settings:
   base:
     TARGETED_DEVICE_FAMILY: 1,2
 
+schemes:
+  NetWorthIOS:
+    shared: true
+    build:
+      targets:
+        NetWorthIOS: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+  NetWorthWidget:
+    shared: true
+    build:
+      targets:
+        NetWorthWidget: all
+    run:
+      config: Debug
+
 targets:
   NetWorthIOS:
     type: application
@@ -31,6 +55,33 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.prabhakaran.networth
+        CODE_SIGN_ENTITLEMENTS: NetWorthIOS/NetWorthIOS.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: 1.0
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies:
+      - target: NetWorthWidget
+        embed: true
+
+  NetWorthWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "18.0"
+    productType: widget-extension
+    sources:
+      - path: NetWorthWidget
+    info:
+      path: NetWorthWidget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionAttributes:
+            WidgetFamily:
+              - systemSmall
+              - systemMedium
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.prabhakaran.networth.widget
+        CODE_SIGN_ENTITLEMENTS: NetWorthWidget/NetWorthWidget.entitlements
+        GENERATE_INFOPLIST_FILE: NO

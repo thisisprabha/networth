@@ -15,6 +15,14 @@ enum AssetCategory: String, Codable, CaseIterable, Identifiable {
     case privateEquity
     case vpfPpf = "vpf_ppf"
     case silver
+    case lifeInsurance
+    case healthInsurance
+    case vehicleInsurance
+    case homeLoan
+    case carLoan
+    case personalLoan
+    case creditCard
+    case otherDebt
 
     var id: String { rawValue }
 }

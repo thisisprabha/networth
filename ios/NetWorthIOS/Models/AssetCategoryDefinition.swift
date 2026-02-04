@@ -8,6 +8,30 @@ struct AssetCategoryDefinition {
     let fields: [AssetFieldDefinition]
     let growthRateDefault: Double
     let growthRateRange: ClosedRange<Double>?
+    let includesInNetWorth: Bool
+    let isLiability: Bool
+
+    init(
+        category: AssetCategory,
+        name: String,
+        symbolName: String,
+        color: Color,
+        fields: [AssetFieldDefinition],
+        growthRateDefault: Double,
+        growthRateRange: ClosedRange<Double>?,
+        includesInNetWorth: Bool = true,
+        isLiability: Bool = false
+    ) {
+        self.category = category
+        self.name = name
+        self.symbolName = symbolName
+        self.color = color
+        self.fields = fields
+        self.growthRateDefault = growthRateDefault
+        self.growthRateRange = growthRateRange
+        self.includesInNetWorth = includesInNetWorth
+        self.isLiability = isLiability
+    }
 }
 
 extension AssetCategoryDefinition {
@@ -25,7 +49,15 @@ extension AssetCategoryDefinition {
         .esop,
         .privateEquity,
         .vpfPpf,
-        .personalAssets
+        .personalAssets,
+        .homeLoan,
+        .carLoan,
+        .personalLoan,
+        .creditCard,
+        .otherDebt,
+        .lifeInsurance,
+        .healthInsurance,
+        .vehicleInsurance
     ]
 
     static let all: [AssetCategory: AssetCategoryDefinition] = {
@@ -62,7 +94,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 17.5,
-                growthRateRange: 15...20
+                growthRateRange: 15...20,
+                includesInNetWorth: true
             ),
             .mutualFunds: AssetCategoryDefinition(
                 category: .mutualFunds,
@@ -82,7 +115,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 11.5,
-                growthRateRange: 10...13
+                growthRateRange: 10...13,
+                includesInNetWorth: true
             ),
             .gold: AssetCategoryDefinition(
                 category: .gold,
@@ -108,7 +142,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 9.5,
-                growthRateRange: 9...10
+                growthRateRange: 9...10,
+                includesInNetWorth: true
             ),
             .silver: AssetCategoryDefinition(
                 category: .silver,
@@ -134,7 +169,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 9.5,
-                growthRateRange: 9...10
+                growthRateRange: 9...10,
+                includesInNetWorth: true
             ),
             .fixedDeposits: AssetCategoryDefinition(
                 category: .fixedDeposits,
@@ -169,7 +205,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 7,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .personalAssets: AssetCategoryDefinition(
                 category: .personalAssets,
@@ -210,7 +247,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: -7.5,
-                growthRateRange: -10...(-5)
+                growthRateRange: -10...(-5),
+                includesInNetWorth: true
             ),
             .bonds: AssetCategoryDefinition(
                 category: .bonds,
@@ -230,7 +268,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 8,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .land: AssetCategoryDefinition(
                 category: .land,
@@ -250,7 +289,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 9,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .home: AssetCategoryDefinition(
                 category: .home,
@@ -270,7 +310,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 9,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .savings: AssetCategoryDefinition(
                 category: .savings,
@@ -290,7 +331,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 4,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .emergencySavings: AssetCategoryDefinition(
                 category: .emergencySavings,
@@ -310,7 +352,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 4,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .esop: AssetCategoryDefinition(
                 category: .esop,
@@ -336,7 +379,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 15,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .privateEquity: AssetCategoryDefinition(
                 category: .privateEquity,
@@ -364,7 +408,8 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 20,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
             ),
             .vpfPpf: AssetCategoryDefinition(
                 category: .vpfPpf,
@@ -384,7 +429,343 @@ extension AssetCategoryDefinition {
                     )
                 ],
                 growthRateDefault: 8.5,
-                growthRateRange: nil
+                growthRateRange: nil,
+                includesInNetWorth: true
+            ),
+            .homeLoan: AssetCategoryDefinition(
+                category: .homeLoan,
+                name: "Home Loan",
+                symbolName: "house",
+                color: .red,
+                fields: [
+                    .init(
+                        id: "debtBalance",
+                        label: "Outstanding Balance",
+                        kind: .slider,
+                        min: 0,
+                        max: 100_000_000,
+                        step: 100_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "interestRate",
+                        label: "Interest Rate (%)",
+                        kind: .number,
+                        min: 0,
+                        max: 20,
+                        step: 0.1,
+                        defaultValue: .number(8)
+                    ),
+                    .init(
+                        id: "lender",
+                        label: "Lender (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "nextPaymentDate",
+                        label: "Next Payment Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: true,
+                isLiability: true
+            ),
+            .carLoan: AssetCategoryDefinition(
+                category: .carLoan,
+                name: "Car Loan",
+                symbolName: "car",
+                color: .orange,
+                fields: [
+                    .init(
+                        id: "debtBalance",
+                        label: "Outstanding Balance",
+                        kind: .slider,
+                        min: 0,
+                        max: 10_000_000,
+                        step: 50_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "interestRate",
+                        label: "Interest Rate (%)",
+                        kind: .number,
+                        min: 0,
+                        max: 20,
+                        step: 0.1,
+                        defaultValue: .number(9)
+                    ),
+                    .init(
+                        id: "lender",
+                        label: "Lender (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "nextPaymentDate",
+                        label: "Next Payment Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: true,
+                isLiability: true
+            ),
+            .personalLoan: AssetCategoryDefinition(
+                category: .personalLoan,
+                name: "Personal Loan",
+                symbolName: "person.text.rectangle",
+                color: .purple,
+                fields: [
+                    .init(
+                        id: "debtBalance",
+                        label: "Outstanding Balance",
+                        kind: .slider,
+                        min: 0,
+                        max: 10_000_000,
+                        step: 50_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "interestRate",
+                        label: "Interest Rate (%)",
+                        kind: .number,
+                        min: 0,
+                        max: 30,
+                        step: 0.1,
+                        defaultValue: .number(12)
+                    ),
+                    .init(
+                        id: "lender",
+                        label: "Lender (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "nextPaymentDate",
+                        label: "Next Payment Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: true,
+                isLiability: true
+            ),
+            .creditCard: AssetCategoryDefinition(
+                category: .creditCard,
+                name: "Credit Card",
+                symbolName: "creditcard",
+                color: .pink,
+                fields: [
+                    .init(
+                        id: "debtBalance",
+                        label: "Current Balance",
+                        kind: .slider,
+                        min: 0,
+                        max: 2_000_000,
+                        step: 10_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "interestRate",
+                        label: "Interest Rate (%)",
+                        kind: .number,
+                        min: 0,
+                        max: 50,
+                        step: 0.1,
+                        defaultValue: .number(30)
+                    ),
+                    .init(
+                        id: "issuer",
+                        label: "Issuer (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "paymentDueDate",
+                        label: "Payment Due Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: true,
+                isLiability: true
+            ),
+            .otherDebt: AssetCategoryDefinition(
+                category: .otherDebt,
+                name: "Other Debt",
+                symbolName: "exclamationmark.triangle",
+                color: .gray,
+                fields: [
+                    .init(
+                        id: "debtBalance",
+                        label: "Outstanding Balance",
+                        kind: .slider,
+                        min: 0,
+                        max: 5_000_000,
+                        step: 25_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "interestRate",
+                        label: "Interest Rate (%)",
+                        kind: .number,
+                        min: 0,
+                        max: 40,
+                        step: 0.1,
+                        defaultValue: .number(0)
+                    ),
+                    .init(
+                        id: "notes",
+                        label: "Notes (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: true,
+                isLiability: true
+            ),
+            .lifeInsurance: AssetCategoryDefinition(
+                category: .lifeInsurance,
+                name: "Life Insurance",
+                symbolName: "heart.text.square",
+                color: .pink,
+                fields: [
+                    .init(
+                        id: "coverageAmount",
+                        label: "Coverage Amount",
+                        kind: .slider,
+                        min: 0,
+                        max: 50_000_000,
+                        step: 50_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "annualPremium",
+                        label: "Annual Premium",
+                        kind: .number,
+                        min: 0,
+                        step: 500,
+                        defaultValue: .number(0)
+                    ),
+                    .init(
+                        id: "provider",
+                        label: "Provider (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "renewalDate",
+                        label: "Renewal Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: false,
+                isLiability: false
+            ),
+            .healthInsurance: AssetCategoryDefinition(
+                category: .healthInsurance,
+                name: "Health Insurance",
+                symbolName: "cross.case",
+                color: .mint,
+                fields: [
+                    .init(
+                        id: "coverageAmount",
+                        label: "Coverage Amount",
+                        kind: .slider,
+                        min: 0,
+                        max: 10_000_000,
+                        step: 50_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "annualPremium",
+                        label: "Annual Premium",
+                        kind: .number,
+                        min: 0,
+                        step: 500,
+                        defaultValue: .number(0)
+                    ),
+                    .init(
+                        id: "provider",
+                        label: "Provider (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "renewalDate",
+                        label: "Renewal Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: false,
+                isLiability: false
+            ),
+            .vehicleInsurance: AssetCategoryDefinition(
+                category: .vehicleInsurance,
+                name: "Vehicle Insurance",
+                symbolName: "car",
+                color: .orange,
+                fields: [
+                    .init(
+                        id: "coverageAmount",
+                        label: "Coverage Amount",
+                        kind: .slider,
+                        min: 0,
+                        max: 5_000_000,
+                        step: 25_000,
+                        defaultValue: .number(0),
+                        format: .currency
+                    ),
+                    .init(
+                        id: "annualPremium",
+                        label: "Annual Premium",
+                        kind: .number,
+                        min: 0,
+                        step: 500,
+                        defaultValue: .number(0)
+                    ),
+                    .init(
+                        id: "provider",
+                        label: "Provider (optional)",
+                        kind: .text,
+                        defaultValue: .text("")
+                    ),
+                    .init(
+                        id: "renewalDate",
+                        label: "Renewal Date",
+                        kind: .date,
+                        defaultValue: .date(.now)
+                    )
+                ],
+                growthRateDefault: 0,
+                growthRateRange: nil,
+                includesInNetWorth: false,
+                isLiability: false
             )
         ]
     }()

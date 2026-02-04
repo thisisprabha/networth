@@ -6,6 +6,7 @@ import Observation
 final class AssetStore {
     var assets: [Asset] = []
     var settings: Settings = .default
+    var snapshots: [NetWorthSnapshot] = []
     var isLoaded = false
 
     private let persistence: PersistenceStore
@@ -20,16 +21,18 @@ final class AssetStore {
             let state = try persistence.load()
             assets = state.assets
             settings = state.settings
+            snapshots = state.snapshots
         } catch {
             assets = []
             settings = .default
+            snapshots = []
         }
         isLoaded = true
     }
 
     func save() {
         do {
-            try persistence.save(state: PersistedState(assets: assets, settings: settings))
+            try persistence.save(state: PersistedState(assets: assets, settings: settings, snapshots: snapshots))
         } catch {
             return
         }
@@ -41,11 +44,13 @@ final class AssetStore {
         } else {
             assets.append(asset)
         }
+        recordSnapshot()
         save()
     }
 
     func delete(_ asset: Asset) {
         assets.removeAll { $0.id == asset.id }
+        recordSnapshot()
         save()
     }
 
@@ -61,6 +66,7 @@ final class AssetStore {
             }
         }
         assets = merged
+        recordSnapshot()
         save()
     }
 
@@ -71,5 +77,49 @@ final class AssetStore {
     func setGrowthRate(_ value: Double, for category: AssetCategory) {
         settings.growthRates[category.rawValue] = value
         save()
+    }
+
+    private func recordSnapshot() {
+        let now = Date()
+        let total = CalculationsService.netWorth(assets)
+        let count = assets.count
+        let categoryTotals = CalculationsService.netWorthComponents(assets: assets)
+            .reduce(into: [String: Double]()) { result, entry in
+                result[entry.key.rawValue] = entry.value
+            }
+        var newSnapshot: NetWorthSnapshot?
+        let updated = NetWorthSnapshot(date: now, netWorth: total, assetCount: count, categoryTotals: categoryTotals)
+        if let last = snapshots.last {
+            let totalsChanged = last.categoryTotals != categoryTotals
+            let netWorthChanged = last.netWorth != total
+            let countChanged = last.assetCount != count
+            guard totalsChanged || netWorthChanged || countChanged else { return }
+            snapshots.append(updated)
+            newSnapshot = updated
+        } else {
+            snapshots.append(updated)
+            newSnapshot = updated
+        }
+
+        if snapshots.count > 120 {
+            snapshots = Array(snapshots.suffix(120))
+        }
+
+        if let snapshot = newSnapshot {
+            let previous = snapshots.dropLast().last
+            let deltaPercent: Double?
+            if let previous, previous.netWorth > 0 {
+                deltaPercent = (snapshot.netWorth - previous.netWorth) / previous.netWorth
+            } else {
+                deltaPercent = nil
+            }
+            WidgetDataService.save(
+                state: WidgetState(
+                    netWorth: snapshot.netWorth,
+                    lastUpdated: snapshot.date,
+                    deltaPercent: deltaPercent
+                )
+            )
+        }
     }
 }

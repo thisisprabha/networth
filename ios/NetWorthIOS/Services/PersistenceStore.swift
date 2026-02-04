@@ -3,6 +3,20 @@ import Foundation
 struct PersistedState: Codable {
     var assets: [Asset]
     var settings: Settings
+    var snapshots: [NetWorthSnapshot]
+
+    init(assets: [Asset], settings: Settings, snapshots: [NetWorthSnapshot] = []) {
+        self.assets = assets
+        self.settings = settings
+        self.snapshots = snapshots
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        assets = try container.decode([Asset].self, forKey: .assets)
+        settings = try container.decode(Settings.self, forKey: .settings)
+        snapshots = try container.decodeIfPresent([NetWorthSnapshot].self, forKey: .snapshots) ?? []
+    }
 }
 
 struct PersistenceStore {

@@ -16,6 +16,11 @@ struct SettingsView: View {
                 Toggle("App Lock", isOn: appLockBinding)
             }
 
+            Section("Reminders") {
+                Toggle("Monthly check‑in reminder", isOn: monthlyReminderBinding)
+                    .tint(Theme.accentAlt)
+            }
+
             Section("Backup & Restore") {
                 Button("Export CSV") { exportCSV() }
                 Button("Import CSV") { isImporting = true }
@@ -62,6 +67,28 @@ struct SettingsView: View {
         } catch {
             alertMessage = "Export failed."
         }
+    }
+
+    private var monthlyReminderBinding: Binding<Bool> {
+        Binding(
+            get: { store.settings.monthlyReminderEnabled },
+            set: { newValue in
+                store.settings.monthlyReminderEnabled = newValue
+                store.save()
+                if newValue {
+                    Task {
+                        let scheduled = await NotificationService.scheduleMonthlyCheckIn()
+                        if !scheduled {
+                            store.settings.monthlyReminderEnabled = false
+                            store.save()
+                            alertMessage = "Notifications are disabled. Enable them in Settings."
+                        }
+                    }
+                } else {
+                    NotificationService.cancelMonthlyCheckIn()
+                }
+            }
+        )
     }
 
     private func handleImport(_ result: Result<URL, Error>) {

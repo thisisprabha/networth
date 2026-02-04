@@ -10,16 +10,21 @@
 		13BCED82C087D9735C029755 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CBA4DEEE14250F1EAF1EEA /* CardContainer.swift */; };
 		2668EF2A0E3C077375B879C3 /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA49189D74360A26821D4867 /* GlassCard.swift */; };
 		34E6891540A2D0596EBA10FF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DBCAB4E0D7EEBECD2BA10C /* Theme.swift */; };
+		3DA905491C596A7522227723 /* NetWorthWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		466BDE489E57A39EB835FD37 /* NetWorthWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6FCFFDCBCB3BDBF07A0DA2 /* NetWorthWidget.swift */; };
 		498518C2820AD9F9E97F2ECC /* AssetDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD5699BE16D80ABCB6DC3B /* AssetDraft.swift */; };
 		554AAFA48B23249D4E89DC2F /* PersistenceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED982FAD75778C8134F9158 /* PersistenceStore.swift */; };
 		5B710CB663111B5B2E98AAD3 /* CSVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A92F5B28CD23E56898A24D /* CSVService.swift */; };
 		6625D0E52B3F89B5EBE8B110 /* GlassStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CD8E440D6B6F83E58DB399 /* GlassStack.swift */; };
 		675DE6B5156594194230AB12 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8DF534B4AB3D2A12C5D634 /* HomeView.swift */; };
+		67D09134D371FB36106771B0 /* WidgetDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52975FD450C2A53D98498EA /* WidgetDataService.swift */; };
+		69E0B99F4ACDF98AB79B922C /* WidgetConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC819894E9A561F17AF14AE5 /* WidgetConstants.swift */; };
 		6CA15898A983F06AB761EBD6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5BE78A698C382DD291E6D0 /* RootView.swift */; };
 		6FD3CB175B364AB172E40DBD /* AssetCategoryDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1534DA90C66EC3A3A61C9814 /* AssetCategoryDefinition.swift */; };
 		7CABE538D7381E9130C189DF /* AssetFieldDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE172A788B1B4DBF4EFEF294 /* AssetFieldDefinition.swift */; };
 		8373D5C6E7E718499D626D78 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E6D48DC91FCCAB0E7F3CF4 /* Formatters.swift */; };
 		83BD6AE2B9C5BBB6EE634150 /* AssetFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D854D1C339DE176AFCA166BE /* AssetFormView.swift */; };
+		8C234E48C34277F0E2345C7C /* NetWorthSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998712A014AE496CC52A5CFA /* NetWorthSnapshot.swift */; };
 		8C88174FB8E37B3B912AC3FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 098B91FAAA38CEFEA4A2F514 /* Assets.xcassets */; };
 		921F2F953BD876FCBE70414D /* CryptoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9D021D0BDB6D58753892DD /* CryptoService.swift */; };
 		97FF65771439AB489D90BF03 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039D79CD10B1363C9ED5C022 /* KeychainService.swift */; };
@@ -28,46 +33,88 @@
 		A6494765235942802CC0AA29 /* AssetRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF5446D536AA9DD69B80B9D /* AssetRowView.swift */; };
 		A7AF7584379C1D1AD1B86951 /* FieldValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B38D7D70BD4C196D1BA531 /* FieldValue.swift */; };
 		A9372FC0283DB4EF0B2D1C6E /* AssetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F28EC13B25BDEFD8B747156 /* AssetStore.swift */; };
+		B1FB853EFB94778CCCB72FCF /* CategoryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320DAD21535D174A9952350 /* CategoryRowView.swift */; };
 		B4FDBEA80C15A1F4E733DA4F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8386F17B5374B4957A796A4F /* SettingsView.swift */; };
 		BA0153816CEF3464816A5FD5 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2302C5389B53F05DACBC5227 /* AppLockView.swift */; };
 		BC158D0789D707AA4B878A45 /* AssetsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14B52FFD3E01F71D903098A /* AssetsListView.swift */; };
 		CE646195479653D18D78DC11 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F93FF6F8FFA3B5382C30A3 /* LaunchScreen.storyboard */; };
+		D22032005E5577A49854B567 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED24E1F3FE13266191CF1047 /* CategoryDetailView.swift */; };
 		D5F64044A0EB768028E8040B /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434D94C4A44A9FB3C3CA5E94 /* Asset.swift */; };
 		DEC61DDDD95B5145AF8DCE58 /* NetWorthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C8327D56696B96F7EC5A71 /* NetWorthApp.swift */; };
 		E22136574663386309DC5603 /* ProjectionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B0DDD1610711C2A7F09D58 /* ProjectionPoint.swift */; };
+		ED4811CDF83D139EBDB6D22E /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2A57A7BE30D7FC2998C2DD /* NotificationService.swift */; };
+		EDEFC4E531782C0836118A15 /* NetWorthWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEE26EA1FDB1E523D951013 /* NetWorthWidgetView.swift */; };
 		EE3F8BBF9619C5E43A43BDD2 /* AssetCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56C6D93CBED73076F69159B /* AssetCategory.swift */; };
 		EE6E9FC1501167497E94DBB6 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEFCFA8EAC7E2D0704C4799F /* Settings.swift */; };
+		FB41A1350C1D7612916AA704 /* CategorySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927A0EAE08A3C6967AB7E874 /* CategorySummary.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		576164D46626E5DF3870901F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A6488A9CDDF49BF056636B9F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B74C43C1E1C990DA71C3D738;
+			remoteInfo = NetWorthWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BB9134674DEC63E827705E63 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3DA905491C596A7522227723 /* NetWorthWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		039D79CD10B1363C9ED5C022 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		04F7999C20CAAD0AE6B11A2B /* NetWorthWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NetWorthWidget.entitlements; sourceTree = "<group>"; };
 		098B91FAAA38CEFEA4A2F514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11B0DDD1610711C2A7F09D58 /* ProjectionPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectionPoint.swift; sourceTree = "<group>"; };
 		1534DA90C66EC3A3A61C9814 /* AssetCategoryDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCategoryDefinition.swift; sourceTree = "<group>"; };
 		1C29F34F9036501DBD1746E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1ED982FAD75778C8134F9158 /* PersistenceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
+		21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NetWorthWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2302C5389B53F05DACBC5227 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
 		32CD8E440D6B6F83E58DB399 /* GlassStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassStack.swift; sourceTree = "<group>"; };
 		3F28EC13B25BDEFD8B747156 /* AssetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetStore.swift; sourceTree = "<group>"; };
 		434D94C4A44A9FB3C3CA5E94 /* Asset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
+		6320DAD21535D174A9952350 /* CategoryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRowView.swift; sourceTree = "<group>"; };
+		6D2A57A7BE30D7FC2998C2DD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		75DBCAB4E0D7EEBECD2BA10C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7DA0E1EABAE875018DB52F24 /* CalculationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationsService.swift; sourceTree = "<group>"; };
+		7F04382681AADB17E3C3BDE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		82A92F5B28CD23E56898A24D /* CSVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVService.swift; sourceTree = "<group>"; };
 		82E6D48DC91FCCAB0E7F3CF4 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		8386F17B5374B4957A796A4F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		83B38D7D70BD4C196D1BA531 /* FieldValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldValue.swift; sourceTree = "<group>"; };
 		84CBA4DEEE14250F1EAF1EEA /* CardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainer.swift; sourceTree = "<group>"; };
+		8AEE26EA1FDB1E523D951013 /* NetWorthWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthWidgetView.swift; sourceTree = "<group>"; };
 		8E9D021D0BDB6D58753892DD /* CryptoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoService.swift; sourceTree = "<group>"; };
+		927A0EAE08A3C6967AB7E874 /* CategorySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySummary.swift; sourceTree = "<group>"; };
+		998712A014AE496CC52A5CFA /* NetWorthSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthSnapshot.swift; sourceTree = "<group>"; };
 		AA49189D74360A26821D4867 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
+		AC819894E9A561F17AF14AE5 /* WidgetConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConstants.swift; sourceTree = "<group>"; };
 		AFF5446D536AA9DD69B80B9D /* AssetRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRowView.swift; sourceTree = "<group>"; };
+		B52975FD450C2A53D98498EA /* WidgetDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataService.swift; sourceTree = "<group>"; };
 		BEFCFA8EAC7E2D0704C4799F /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		BF4FA202691D5DB4B46F5A2C /* NetWorthIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NetWorthIOS.entitlements; sourceTree = "<group>"; };
 		C7DCC085FBE0161E69263283 /* AppLockStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockStore.swift; sourceTree = "<group>"; };
 		C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetWorthIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC5BE78A698C382DD291E6D0 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D854D1C339DE176AFCA166BE /* AssetFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormView.swift; sourceTree = "<group>"; };
+		DA6FCFFDCBCB3BDBF07A0DA2 /* NetWorthWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthWidget.swift; sourceTree = "<group>"; };
 		DE8DF534B4AB3D2A12C5D634 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		E14B52FFD3E01F71D903098A /* AssetsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsListView.swift; sourceTree = "<group>"; };
 		E4C8327D56696B96F7EC5A71 /* NetWorthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthApp.swift; sourceTree = "<group>"; };
+		ED24E1F3FE13266191CF1047 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
 		F1DD5699BE16D80ABCB6DC3B /* AssetDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDraft.swift; sourceTree = "<group>"; };
 		F56C6D93CBED73076F69159B /* AssetCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCategory.swift; sourceTree = "<group>"; };
 		F8F93FF6F8FFA3B5382C30A3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -83,7 +130,9 @@
 				82A92F5B28CD23E56898A24D /* CSVService.swift */,
 				82E6D48DC91FCCAB0E7F3CF4 /* Formatters.swift */,
 				039D79CD10B1363C9ED5C022 /* KeychainService.swift */,
+				6D2A57A7BE30D7FC2998C2DD /* NotificationService.swift */,
 				1ED982FAD75778C8134F9158 /* PersistenceStore.swift */,
+				B52975FD450C2A53D98498EA /* WidgetDataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -92,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */,
+				21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +153,18 @@
 				3F28EC13B25BDEFD8B747156 /* AssetStore.swift */,
 			);
 			path = Stores;
+			sourceTree = "<group>";
+		};
+		98DCEE953EAE77BA8B74315E /* NetWorthWidget */ = {
+			isa = PBXGroup;
+			children = (
+				7F04382681AADB17E3C3BDE7 /* Info.plist */,
+				04F7999C20CAAD0AE6B11A2B /* NetWorthWidget.entitlements */,
+				DA6FCFFDCBCB3BDBF07A0DA2 /* NetWorthWidget.swift */,
+				8AEE26EA1FDB1E523D951013 /* NetWorthWidgetView.swift */,
+				AC819894E9A561F17AF14AE5 /* WidgetConstants.swift */,
+			);
+			path = NetWorthWidget;
 			sourceTree = "<group>";
 		};
 		BA8DAAD45EFC172A4898851D /* DesignSystem */ = {
@@ -123,6 +185,8 @@
 				D854D1C339DE176AFCA166BE /* AssetFormView.swift */,
 				AFF5446D536AA9DD69B80B9D /* AssetRowView.swift */,
 				E14B52FFD3E01F71D903098A /* AssetsListView.swift */,
+				ED24E1F3FE13266191CF1047 /* CategoryDetailView.swift */,
+				6320DAD21535D174A9952350 /* CategoryRowView.swift */,
 				DE8DF534B4AB3D2A12C5D634 /* HomeView.swift */,
 				CC5BE78A698C382DD291E6D0 /* RootView.swift */,
 				8386F17B5374B4957A796A4F /* SettingsView.swift */,
@@ -138,7 +202,9 @@
 				1534DA90C66EC3A3A61C9814 /* AssetCategoryDefinition.swift */,
 				F1DD5699BE16D80ABCB6DC3B /* AssetDraft.swift */,
 				FE172A788B1B4DBF4EFEF294 /* AssetFieldDefinition.swift */,
+				927A0EAE08A3C6967AB7E874 /* CategorySummary.swift */,
 				83B38D7D70BD4C196D1BA531 /* FieldValue.swift */,
+				998712A014AE496CC52A5CFA /* NetWorthSnapshot.swift */,
 				11B0DDD1610711C2A7F09D58 /* ProjectionPoint.swift */,
 				BEFCFA8EAC7E2D0704C4799F /* Settings.swift */,
 			);
@@ -149,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				F5A826399A611B09A47BFBDB /* NetWorthIOS */,
+				98DCEE953EAE77BA8B74315E /* NetWorthWidget */,
 				8068CEA8550A672B9461E4EE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -160,6 +227,7 @@
 				1C29F34F9036501DBD1746E5 /* Info.plist */,
 				F8F93FF6F8FFA3B5382C30A3 /* LaunchScreen.storyboard */,
 				E4C8327D56696B96F7EC5A71 /* NetWorthApp.swift */,
+				BF4FA202691D5DB4B46F5A2C /* NetWorthIOS.entitlements */,
 				BA8DAAD45EFC172A4898851D /* DesignSystem */,
 				C382DAC3057DF5855C02CE19 /* Models */,
 				7304A904F99AB2C9587DCDCD /* Services */,
@@ -178,10 +246,12 @@
 			buildPhases = (
 				E19DD6B4C0A3D119C752340D /* Sources */,
 				CEB912B8984A220851E935E5 /* Resources */,
+				BB9134674DEC63E827705E63 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A3DCE12C57D4F77532DA8899 /* PBXTargetDependency */,
 			);
 			name = NetWorthIOS;
 			packageProductDependencies = (
@@ -189,6 +259,23 @@
 			productName = NetWorthIOS;
 			productReference = C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B74C43C1E1C990DA71C3D738 /* NetWorthWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C6BE880BC553BE004E43EE59 /* Build configuration list for PBXNativeTarget "NetWorthWidget" */;
+			buildPhases = (
+				FB13149C3D4A3E488B0E4742 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NetWorthWidget;
+			packageProductDependencies = (
+			);
+			productName = NetWorthWidget;
+			productReference = 21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -213,6 +300,7 @@
 			projectRoot = "";
 			targets = (
 				7F615FAB81D26788F2231320 /* NetWorthIOS */,
+				B74C43C1E1C990DA71C3D738 /* NetWorthWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -248,6 +336,9 @@
 				5B710CB663111B5B2E98AAD3 /* CSVService.swift in Sources */,
 				9C5EAFFEB129E556466F020B /* CalculationsService.swift in Sources */,
 				13BCED82C087D9735C029755 /* CardContainer.swift in Sources */,
+				D22032005E5577A49854B567 /* CategoryDetailView.swift in Sources */,
+				B1FB853EFB94778CCCB72FCF /* CategoryRowView.swift in Sources */,
+				FB41A1350C1D7612916AA704 /* CategorySummary.swift in Sources */,
 				921F2F953BD876FCBE70414D /* CryptoService.swift in Sources */,
 				A7AF7584379C1D1AD1B86951 /* FieldValue.swift in Sources */,
 				8373D5C6E7E718499D626D78 /* Formatters.swift in Sources */,
@@ -256,16 +347,37 @@
 				675DE6B5156594194230AB12 /* HomeView.swift in Sources */,
 				97FF65771439AB489D90BF03 /* KeychainService.swift in Sources */,
 				DEC61DDDD95B5145AF8DCE58 /* NetWorthApp.swift in Sources */,
+				8C234E48C34277F0E2345C7C /* NetWorthSnapshot.swift in Sources */,
+				ED4811CDF83D139EBDB6D22E /* NotificationService.swift in Sources */,
 				554AAFA48B23249D4E89DC2F /* PersistenceStore.swift in Sources */,
 				E22136574663386309DC5603 /* ProjectionPoint.swift in Sources */,
 				6CA15898A983F06AB761EBD6 /* RootView.swift in Sources */,
 				EE6E9FC1501167497E94DBB6 /* Settings.swift in Sources */,
 				B4FDBEA80C15A1F4E733DA4F /* SettingsView.swift in Sources */,
 				34E6891540A2D0596EBA10FF /* Theme.swift in Sources */,
+				67D09134D371FB36106771B0 /* WidgetDataService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB13149C3D4A3E488B0E4742 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				466BDE489E57A39EB835FD37 /* NetWorthWidget.swift in Sources */,
+				EDEFC4E531782C0836118A15 /* NetWorthWidgetView.swift in Sources */,
+				69E0B99F4ACDF98AB79B922C /* WidgetConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A3DCE12C57D4F77532DA8899 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B74C43C1E1C990DA71C3D738 /* NetWorthWidget */;
+			targetProxy = 576164D46626E5DF3870901F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		27DD9339AF381CDE6E99C4C1 /* Debug */ = {
@@ -331,6 +443,25 @@
 			};
 			name = Debug;
 		};
+		5C0D06F5971E7C5BE7CC3C5F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NetWorthWidget/NetWorthWidget.entitlements;
+				DEVELOPMENT_TEAM = P284X6775D;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = NetWorthWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prabhakaran.networth.widget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		720D85C25E2DB0E437D5BB60 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -391,9 +522,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NetWorthIOS/NetWorthIOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P284X6775D;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthIOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -407,13 +540,34 @@
 			};
 			name = Release;
 		};
+		B3426EBEA3F4A94D3500009E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NetWorthWidget/NetWorthWidget.entitlements;
+				DEVELOPMENT_TEAM = P284X6775D;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = NetWorthWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prabhakaran.networth.widget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		CC7B969DBF4ACE0A67BED499 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NetWorthIOS/NetWorthIOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P284X6775D;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthIOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -435,6 +589,15 @@
 			buildConfigurations = (
 				27DD9339AF381CDE6E99C4C1 /* Debug */,
 				720D85C25E2DB0E437D5BB60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C6BE880BC553BE004E43EE59 /* Build configuration list for PBXNativeTarget "NetWorthWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5C0D06F5971E7C5BE7CC3C5F /* Debug */,
+				B3426EBEA3F4A94D3500009E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

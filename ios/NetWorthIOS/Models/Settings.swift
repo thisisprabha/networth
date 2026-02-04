@@ -4,6 +4,7 @@ struct Settings: Codable, Hashable {
     var currencyCode: String
     var growthRates: [String: Double]
     var appLockEnabled: Bool
+    var monthlyReminderEnabled: Bool
 
     static var `default`: Settings {
         var rates: [String: Double] = [:]
@@ -13,7 +14,8 @@ struct Settings: Codable, Hashable {
         return Settings(
             currencyCode: "INR",
             growthRates: rates,
-            appLockEnabled: true
+            appLockEnabled: true,
+            monthlyReminderEnabled: false
         )
     }
 }

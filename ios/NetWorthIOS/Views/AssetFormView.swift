@@ -8,7 +8,7 @@ struct AssetFormView: View {
     @State private var selectedCategory: AssetCategory
     private let isEditing: Bool
 
-    init(store: AssetStore, asset: Asset?) {
+    init(store: AssetStore, asset: Asset?, initialCategory: AssetCategory? = nil) {
         self.store = store
         if let asset {
             let draft = AssetDraft(asset: asset)
@@ -16,9 +16,10 @@ struct AssetFormView: View {
             _selectedCategory = State(initialValue: draft.category)
             isEditing = true
         } else {
-            let draft = AssetDraft.new(category: AssetCategoryDefinition.ordered.first ?? .stocks)
+            let category = initialCategory ?? AssetCategoryDefinition.ordered.first ?? .stocks
+            let draft = AssetDraft.new(category: category)
             _draft = State(initialValue: draft)
-            _selectedCategory = State(initialValue: draft.category)
+            _selectedCategory = State(initialValue: category)
             isEditing = false
         }
     }
