@@ -5,11 +5,11 @@ import LocalAuthentication
 @MainActor
 @Observable
 final class AppLockStore {
-    var isUnlocked = false
+    var isUnlocked = true
     var isEnabled = true
     var gracePeriodSeconds: TimeInterval = 0
     var lastUnlockDate: Date?
-    private var requiresUnlock = true
+    private var requiresUnlock = false
 
     var isLocked: Bool {
         isEnabled && !isUnlocked
@@ -23,6 +23,7 @@ final class AppLockStore {
     func unlockIfNeeded() async {
         guard isEnabled else {
             isUnlocked = true
+            requiresUnlock = false
             return
         }
         guard requiresUnlock || !isUnlocked else { return }
@@ -30,10 +31,10 @@ final class AppLockStore {
             let elapsed = Date().timeIntervalSince(lastUnlockDate)
             if elapsed <= gracePeriodSeconds {
                 isUnlocked = true
+                requiresUnlock = false
                 return
             }
         }
-        await unlock()
     }
 
     func unlock() async {

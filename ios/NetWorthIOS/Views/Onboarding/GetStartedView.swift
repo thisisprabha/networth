@@ -61,13 +61,6 @@ struct GetStartedView: View {
                         }
                     }
                     .buttonStyle(.plain)
-
-                    Divider()
-                        .padding(.vertical, Theme.Spacing.small)
-
-                    Text("You can change this anytime in Settings. This only affects formatting — we won’t convert existing numbers.")
-                        .font(AppFont.font(.caption))
-                        .foregroundStyle(Theme.secondaryText)
                 }
 
                 Spacer(minLength: 0)
@@ -187,4 +180,3 @@ struct GetStartedView: View {
         }
     }
 }
-
