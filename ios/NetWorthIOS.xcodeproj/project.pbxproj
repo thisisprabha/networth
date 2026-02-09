@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -97,7 +97,7 @@
 		1906A54A543B8A804EB260A5 /* AppFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFont.swift; sourceTree = "<group>"; };
 		1C29F34F9036501DBD1746E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1ED982FAD75778C8134F9158 /* PersistenceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
-		21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = NetWorthWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		21DB3BDAE0B759BDCB617383 /* NetWorthWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NetWorthWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2302C5389B53F05DACBC5227 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
 		32CD8E440D6B6F83E58DB399 /* GlassStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassStack.swift; sourceTree = "<group>"; };
 		3C8591DA678918A41CE3A55B /* SupportedRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedRegion.swift; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 		BEFCFA8EAC7E2D0704C4799F /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		BF4FA202691D5DB4B46F5A2C /* NetWorthIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NetWorthIOS.entitlements; sourceTree = "<group>"; };
 		C7DCC085FBE0161E69263283 /* AppLockStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockStore.swift; sourceTree = "<group>"; };
-		C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NetWorthIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetWorthIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC5BE78A698C382DD291E6D0 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D320A173B09CB7DC754E6ED6 /* iAWriterQuattroS-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iAWriterQuattroS-Regular.ttf"; sourceTree = "<group>"; };
 		D854D1C339DE176AFCA166BE /* AssetFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormView.swift; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 		DE8DF534B4AB3D2A12C5D634 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		E14B52FFD3E01F71D903098A /* AssetsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsListView.swift; sourceTree = "<group>"; };
 		E4C8327D56696B96F7EC5A71 /* NetWorthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthApp.swift; sourceTree = "<group>"; };
-		EC044DBD52993173A6C3968E /* bg.svg */ = {isa = PBXFileReference; path = bg.svg; sourceTree = "<group>"; };
+		EC044DBD52993173A6C3968E /* bg.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = bg.svg; sourceTree = "<group>"; };
 		ED24E1F3FE13266191CF1047 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
 		F1DD5699BE16D80ABCB6DC3B /* AssetDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDraft.swift; sourceTree = "<group>"; };
 		F26EF6F85DBAAFB285EA5B0A /* WidgetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetState.swift; sourceTree = "<group>"; };
@@ -350,8 +350,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 6947AB17EA53CC9FD5AD5928 /* Build configuration list for PBXProject "NetWorthIOS" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -363,7 +361,6 @@
 			);
 			mainGroup = E228AC6AFC0835F4496BF84B;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -530,6 +527,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = NetWorthWidget/NetWorthWidget.entitlements;
+				DEVELOPMENT_TEAM = P284X6775D;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -607,6 +605,7 @@
 				CODE_SIGN_ENTITLEMENTS = NetWorthIOS/NetWorthIOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P284X6775D;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthIOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -625,6 +624,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = NetWorthWidget/NetWorthWidget.entitlements;
+				DEVELOPMENT_TEAM = P284X6775D;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -646,6 +646,7 @@
 				CODE_SIGN_ENTITLEMENTS = NetWorthIOS/NetWorthIOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P284X6775D;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthIOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
