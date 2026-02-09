@@ -32,6 +32,7 @@ struct RootView: View {
         }
         .background(Theme.background)
         .font(AppFont.font(.body))
+        .environment(\.moneyConfig, MoneyFormatConfig(currencyCode: assetStore.settings.currencyCode, regionCode: assetStore.settings.regionCode))
         .tint(Theme.accentAlt)
         .toolbarBackground(Theme.background, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
@@ -42,6 +43,14 @@ struct RootView: View {
             if appLockStore.isLocked {
                 AppLockView(store: appLockStore)
             }
+        }
+        .sheet(
+            isPresented: Binding(
+                get: { assetStore.isLoaded && !assetStore.settings.hasCompletedOnboarding },
+                set: { _ in }
+            )
+        ) {
+            CountryOnboardingView(store: assetStore)
         }
         .task {
             assetStore.load()

@@ -79,6 +79,16 @@ final class AssetStore {
         save()
     }
 
+    func setRegion(_ region: SupportedRegion, markOnboardingComplete: Bool) {
+        settings.currencyCode = region.currencyCode
+        settings.regionCode = region.regionCode
+        if markOnboardingComplete {
+            settings.hasCompletedOnboarding = true
+        }
+        save()
+        refreshWidgetState()
+    }
+
     private func recordSnapshot() {
         let now = Date()
         let total = CalculationsService.netWorth(assets)
@@ -117,9 +127,32 @@ final class AssetStore {
                 state: WidgetState(
                     netWorth: snapshot.netWorth,
                     lastUpdated: snapshot.date,
-                    deltaPercent: deltaPercent
+                    deltaPercent: deltaPercent,
+                    currencyCode: settings.currencyCode,
+                    regionCode: settings.regionCode
                 )
             )
         }
+    }
+
+    private func refreshWidgetState() {
+        let netWorth = snapshots.last?.netWorth ?? CalculationsService.netWorth(assets)
+        let lastUpdated = snapshots.last?.date ?? Date()
+        let previous = snapshots.dropLast().last
+        let deltaPercent: Double?
+        if let previous, previous.netWorth > 0 {
+            deltaPercent = (netWorth - previous.netWorth) / previous.netWorth
+        } else {
+            deltaPercent = nil
+        }
+        WidgetDataService.save(
+            state: WidgetState(
+                netWorth: netWorth,
+                lastUpdated: lastUpdated,
+                deltaPercent: deltaPercent,
+                currencyCode: settings.currencyCode,
+                regionCode: settings.regionCode
+            )
+        )
     }
 }

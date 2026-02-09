@@ -1,12 +1,6 @@
 import WidgetKit
 import SwiftUI
 
-struct WidgetState: Codable, Hashable {
-    let netWorth: Double
-    let lastUpdated: Date
-    let deltaPercent: Double?
-}
-
 struct NetWorthEntry: TimelineEntry {
     let date: Date
     let state: WidgetState
@@ -16,7 +10,7 @@ struct NetWorthProvider: TimelineProvider {
     func placeholder(in context: Context) -> NetWorthEntry {
         NetWorthEntry(
             date: .now,
-            state: WidgetState(netWorth: 0, lastUpdated: .now, deltaPercent: nil)
+            state: WidgetState(netWorth: 0, lastUpdated: .now, deltaPercent: nil, currencyCode: "INR", regionCode: "IN")
         )
     }
 
@@ -39,7 +33,7 @@ struct NetWorthProvider: TimelineProvider {
                 return decoded
             }
         }
-        return WidgetState(netWorth: 0, lastUpdated: .now, deltaPercent: nil)
+        return WidgetState(netWorth: 0, lastUpdated: .now, deltaPercent: nil, currencyCode: "INR", regionCode: "IN")
     }
 }
 

@@ -9,6 +9,9 @@ struct SettingsView: View {
     @State private var isExporting = false
     @State private var exportDocument = CSVDocument(data: Data())
     @State private var alertMessage: String?
+    @State private var isChoosingRegion = false
+    @State private var pendingRegion: SupportedRegion?
+    @State private var showRegionChangeConfirmation = false
 
     var body: some View {
         ZStack {
@@ -16,6 +19,29 @@ struct SettingsView: View {
                 .ignoresSafeArea()
 
             Form {
+                Section {
+                    Button {
+                        isChoosingRegion = true
+                    } label: {
+                        HStack {
+                            Text("Country & currency")
+                                .foregroundStyle(Theme.primaryText)
+                            Spacer()
+                            Text(selectedRegion.displayName)
+                                .foregroundStyle(Theme.secondaryText)
+                        }
+                    }
+                } header: {
+                    Text("Preferences")
+                        .font(AppFont.font(.subheadline, weight: .semibold))
+                        .foregroundStyle(Theme.primaryText)
+                        .textCase(nil)
+                } footer: {
+                    Text("Changes formatting only. Existing values won’t be converted.")
+                        .font(AppFont.font(.caption2))
+                        .foregroundStyle(Theme.secondaryText)
+                }
+
                 Section {
                     Toggle("App Lock", isOn: appLockBinding)
                         .tint(Theme.accentAlt)
@@ -61,6 +87,30 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .scrollContentBackground(.hidden)
         }
+        .sheet(isPresented: $isChoosingRegion) {
+            RegionPickerView(
+                title: "Country & currency",
+                subtitle: "Pick the currency you want to use in the app.",
+                selected: selectedRegion,
+                showsCancel: true
+            ) { region in
+                guard region != selectedRegion else { return }
+                pendingRegion = region
+                showRegionChangeConfirmation = true
+            }
+        }
+        .confirmationDialog("Change country & currency?", isPresented: $showRegionChangeConfirmation, titleVisibility: .visible) {
+            Button("Change") {
+                guard let pendingRegion else { return }
+                store.setRegion(pendingRegion, markOnboardingComplete: false)
+                self.pendingRegion = nil
+            }
+            Button("Cancel", role: .cancel) {
+                pendingRegion = nil
+            }
+        } message: {
+            Text("This changes formatting only. Existing values will not be converted.")
+        }
         .fileExporter(
             isPresented: $isExporting,
             document: exportDocument,
@@ -78,6 +128,12 @@ struct SettingsView: View {
         } message: {
             Text(alertMessage ?? "")
         }
+    }
+
+    private var selectedRegion: SupportedRegion {
+        SupportedRegion.match(currencyCode: store.settings.currencyCode, regionCode: store.settings.regionCode)
+            ?? SupportedRegion.all.first(where: { $0.currencyCode == store.settings.currencyCode })
+            ?? SupportedRegion.all.first!
     }
 
     private var appLockBinding: Binding<Bool> {

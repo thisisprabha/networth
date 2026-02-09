@@ -3,6 +3,7 @@ import SwiftUI
 struct AssetFormView: View {
     let store: AssetStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.moneyConfig) private var moneyConfig
 
     @State private var draft: AssetDraft
     @State private var selectedCategory: AssetCategory
@@ -47,7 +48,7 @@ struct AssetFormView: View {
                 } header: {
                     Text("Details")
                 } footer: {
-                    Text("Values are stored in INR.")
+                    Text("Values are stored in \(Formatters.currencyDisplay(config: moneyConfig)).")
                 }
 
                 Section {
@@ -209,6 +210,7 @@ private struct SliderFieldView: View {
     let max: Double
     let step: Double
     let format: FieldFormat
+    @Environment(\.moneyConfig) private var moneyConfig
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.small) {
@@ -225,7 +227,7 @@ private struct SliderFieldView: View {
     private var displayValue: String {
         switch format {
         case .currency:
-            return Formatters.formatINR(value.wrappedValue)
+            return Formatters.formatMoney(value.wrappedValue, config: moneyConfig)
         case .plain:
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal

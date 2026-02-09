@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CategoryRowView: View {
     let summary: CategorySummary
+    @Environment(\.moneyConfig) private var moneyConfig
 
     var body: some View {
         HStack(spacing: Theme.Spacing.medium) {
@@ -29,7 +30,7 @@ struct CategoryRowView: View {
             Spacer()
 
             let isLiability = summary.category.definition.isLiability
-            let valueText = (isLiability ? "-" : "") + Formatters.formatINR(summary.total)
+            let valueText = (isLiability ? "-" : "") + Formatters.formatMoney(summary.total, config: moneyConfig)
             Text(valueText)
                 .font(AppFont.font(.subheadline, weight: .semibold))
                 .foregroundStyle(isLiability ? Theme.negative : Theme.primaryText)

@@ -22,7 +22,7 @@ struct NetWorthWidgetView: View {
                 .font(WidgetTheme.titleFont)
                 .foregroundStyle(.white.opacity(0.8))
 
-            Text(formatINR(entry.state.netWorth))
+            Text(Formatters.formatMoney(entry.state.netWorth, config: moneyConfig))
                 .font(WidgetTheme.valueFont)
                 .foregroundStyle(.white)
                 .lineLimit(1)
@@ -54,25 +54,7 @@ struct NetWorthWidgetView: View {
         )
     }
 
-    private func formatINR(_ value: Double) -> String {
-        if value >= 10_000_000 {
-            return "₹" + formattedDecimal(value / 10_000_000) + "Cr"
-        }
-        if value >= 100_000 {
-            return "₹" + formattedDecimal(value / 100_000) + "L"
-        }
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "INR"
-        formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: value)) ?? "₹0"
-    }
-
-    private func formattedDecimal(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 1
-        formatter.minimumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: value)) ?? "0"
+    private var moneyConfig: MoneyFormatConfig {
+        MoneyFormatConfig(currencyCode: entry.state.currencyCode, regionCode: entry.state.regionCode)
     }
 }

@@ -214,6 +214,7 @@ private struct HeroHeaderView: View {
     let projectionValue: Double
     let percentGrowth: Double
     let lastUpdated: Date?
+    @Environment(\.moneyConfig) private var moneyConfig
 
     var body: some View {
         ZStack {
@@ -223,7 +224,7 @@ private struct HeroHeaderView: View {
                     .font(AppFont.font(.subheadline, weight: .semibold))
                     .foregroundStyle(Theme.secondaryText)
 
-                Text(Formatters.formatINR(currentValue))
+                Text(Formatters.formatMoney(currentValue, config: moneyConfig))
                     .font(Theme.Typography.heroValue)
                     .foregroundStyle(Theme.primaryText)
                     .contentTransition(.numericText())
@@ -254,6 +255,7 @@ private struct ProjectionCard: View {
     let currentValue: Double
     let projectionValue: Double
     let percentGrowth: Double
+    @Environment(\.moneyConfig) private var moneyConfig
 
     private var delta: Double {
         projectionValue - currentValue
@@ -271,7 +273,7 @@ private struct ProjectionCard: View {
                         .background(Theme.accentAlt.opacity(0.15), in: Capsule())
                 }
 
-                Text(Formatters.formatINR(projectionValue))
+                Text(Formatters.formatMoney(projectionValue, config: moneyConfig))
                     .font(AppFont.font(.title2, weight: .bold))
                     .foregroundStyle(Theme.primaryText)
                     .contentTransition(.numericText())
@@ -363,6 +365,7 @@ private struct GrowthPill: View {
 
 private struct InsightsCard: View {
     let delta: NetWorthDelta?
+    @Environment(\.moneyConfig) private var moneyConfig
 
     var body: some View {
         CardContainer {
@@ -372,7 +375,7 @@ private struct InsightsCard: View {
                 if let delta {
                     InsightRow(
                         title: "Net worth change",
-                        value: Formatters.formatINR(delta.amount),
+                        value: Formatters.formatMoney(delta.amount, config: moneyConfig),
                         valueColor: delta.amount >= 0 ? Theme.positive : Theme.negative
                     )
                     InsightRow(
@@ -396,6 +399,7 @@ private struct InsightsCard: View {
 
 private struct TrendCard: View {
     let snapshots: [NetWorthSnapshot]
+    @Environment(\.moneyConfig) private var moneyConfig
 
     private struct TrendPoint: Identifiable {
         let index: Int
@@ -460,7 +464,7 @@ private struct TrendCard: View {
                                     if usePercent {
                                         Text(yValue, format: .percent.precision(.fractionLength(0)))
                                     } else {
-                                        Text(Formatters.formatINRCompact(yValue))
+                                        Text(Formatters.formatMoneyCompact(yValue, config: moneyConfig))
                                     }
                                 }
                             }

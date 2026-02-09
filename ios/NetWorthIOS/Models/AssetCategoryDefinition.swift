@@ -134,7 +134,7 @@ extension AssetCategoryDefinition {
                     ),
                     .init(
                         id: "goldRate",
-                        label: "Current Rate (₹ per gram)",
+                        label: "Current Rate (per gram)",
                         kind: .number,
                         min: 0,
                         step: 100,
@@ -161,7 +161,7 @@ extension AssetCategoryDefinition {
                     ),
                     .init(
                         id: "silverRate",
-                        label: "Current Rate (₹ per gram)",
+                        label: "Current Rate (per gram)",
                         kind: .number,
                         min: 0,
                         step: 1,

@@ -3,10 +3,11 @@ import SwiftUI
 struct AssetRowView: View {
     let asset: Asset
     let value: Double
+    @Environment(\.moneyConfig) private var moneyConfig
 
     var body: some View {
         let isLiability = asset.category.definition.isLiability
-        let valueText = (isLiability ? "-" : "") + Formatters.formatINR(value)
+        let valueText = (isLiability ? "-" : "") + Formatters.formatMoney(value, config: moneyConfig)
 
         HStack(spacing: Theme.Spacing.medium) {
             RowIcon(systemName: asset.category.definition.symbolName, color: asset.category.definition.color)

@@ -37,6 +37,7 @@ targets:
     platform: iOS
     deploymentTarget: "18.0"
     sources:
+      - path: Shared
       - path: NetWorthIOS
     info:
       path: NetWorthIOS/Info.plist
@@ -73,6 +74,7 @@ targets:
     deploymentTarget: "18.0"
     productType: widget-extension
     sources:
+      - path: Shared
       - path: NetWorthWidget
     info:
       path: NetWorthWidget/Info.plist

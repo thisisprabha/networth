@@ -1,11 +1,5 @@
 import Foundation
 
-struct WidgetState: Codable, Hashable {
-    let netWorth: Double
-    let lastUpdated: Date
-    let deltaPercent: Double?
-}
-
 enum WidgetDataService {
     static let appGroup = "group.com.prabhakaran.networth"
     static let key = "widget.state"

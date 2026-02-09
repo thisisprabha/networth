@@ -5,6 +5,7 @@ struct CategoryDetailView: View {
     let category: AssetCategory
 
     @State private var activeSheet: AssetSheet?
+    @Environment(\.moneyConfig) private var moneyConfig
 
     private var assets: [Asset] {
         store.assets
@@ -17,7 +18,7 @@ struct CategoryDetailView: View {
     }
 
     private var totalDisplay: String {
-        let value = Formatters.formatINR(totalValue)
+        let value = Formatters.formatMoney(totalValue, config: moneyConfig)
         return category.definition.isLiability ? "-" + value : value
     }
 
