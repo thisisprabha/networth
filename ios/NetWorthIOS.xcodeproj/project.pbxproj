@@ -136,7 +136,7 @@
 		BEFCFA8EAC7E2D0704C4799F /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		BF4FA202691D5DB4B46F5A2C /* NetWorthIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NetWorthIOS.entitlements; sourceTree = "<group>"; };
 		C7DCC085FBE0161E69263283 /* AppLockStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockStore.swift; sourceTree = "<group>"; };
-		C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NetWorthIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9E5F6B00C5E6C2582C57254 /* NetWorthIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetWorthIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC5BE78A698C382DD291E6D0 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D320A173B09CB7DC754E6ED6 /* iAWriterQuattroS-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iAWriterQuattroS-Regular.ttf"; sourceTree = "<group>"; };
 		D854D1C339DE176AFCA166BE /* AssetFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormView.swift; sourceTree = "<group>"; };
@@ -613,6 +613,7 @@
 				CODE_SIGN_ENTITLEMENTS = NetWorthIOS/NetWorthIOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P284X6775D;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthIOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -653,6 +654,7 @@
 				CODE_SIGN_ENTITLEMENTS = NetWorthIOS/NetWorthIOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P284X6775D;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetWorthIOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
