@@ -4,6 +4,8 @@ struct Settings: Codable, Hashable {
     var currencyCode: String
     var regionCode: String
     var hasCompletedOnboarding: Bool
+    var onboardingSnoozeUntil: Date?
+    var didShowReminderUpsell: Bool
     var growthRates: [String: Double]
     var appLockEnabled: Bool
     var monthlyReminderEnabled: Bool
@@ -12,6 +14,8 @@ struct Settings: Codable, Hashable {
         case currencyCode
         case regionCode
         case hasCompletedOnboarding
+        case onboardingSnoozeUntil
+        case didShowReminderUpsell
         case growthRates
         case appLockEnabled
         case monthlyReminderEnabled
@@ -21,6 +25,8 @@ struct Settings: Codable, Hashable {
         currencyCode: String,
         regionCode: String,
         hasCompletedOnboarding: Bool,
+        onboardingSnoozeUntil: Date?,
+        didShowReminderUpsell: Bool,
         growthRates: [String: Double],
         appLockEnabled: Bool,
         monthlyReminderEnabled: Bool
@@ -28,6 +34,8 @@ struct Settings: Codable, Hashable {
         self.currencyCode = currencyCode
         self.regionCode = regionCode
         self.hasCompletedOnboarding = hasCompletedOnboarding
+        self.onboardingSnoozeUntil = onboardingSnoozeUntil
+        self.didShowReminderUpsell = didShowReminderUpsell
         self.growthRates = growthRates
         self.appLockEnabled = appLockEnabled
         self.monthlyReminderEnabled = monthlyReminderEnabled
@@ -42,6 +50,8 @@ struct Settings: Codable, Hashable {
             ?? SupportedRegion.defaultRegionCode(forCurrencyCode: currencyCode)
 
         self.hasCompletedOnboarding = try container.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? true
+        self.onboardingSnoozeUntil = try container.decodeIfPresent(Date.self, forKey: .onboardingSnoozeUntil)
+        self.didShowReminderUpsell = try container.decodeIfPresent(Bool.self, forKey: .didShowReminderUpsell) ?? true
 
         var rates: [String: Double] = [:]
         for category in AssetCategory.allCases {
@@ -66,6 +76,8 @@ struct Settings: Codable, Hashable {
             currencyCode: currencyCode,
             regionCode: regionCode,
             hasCompletedOnboarding: false,
+            onboardingSnoozeUntil: nil,
+            didShowReminderUpsell: false,
             growthRates: rates,
             appLockEnabled: true,
             monthlyReminderEnabled: false

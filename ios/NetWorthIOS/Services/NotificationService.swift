@@ -4,6 +4,14 @@ import UserNotifications
 enum NotificationService {
     static let monthlyIdentifier = "networth.monthly.checkin"
 
+    static func authorizationStatus() async -> UNAuthorizationStatus {
+        await withCheckedContinuation { continuation in
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                continuation.resume(returning: settings.authorizationStatus)
+            }
+        }
+    }
+
     static func requestAuthorization() async -> Bool {
         await withCheckedContinuation { continuation in
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
@@ -12,9 +20,19 @@ enum NotificationService {
         }
     }
 
-    static func scheduleMonthlyCheckIn(hour: Int = 9) async -> Bool {
+    static func scheduleMonthlyCheckInIfAuthorized(hour: Int = 9) async -> Bool {
+        let status = await authorizationStatus()
+        guard status == .authorized || status == .provisional else { return false }
+        return await scheduleMonthlyCheckIn(hour: hour)
+    }
+
+    static func requestAndScheduleMonthlyCheckIn(hour: Int = 9) async -> Bool {
         let granted = await requestAuthorization()
         guard granted else { return false }
+        return await scheduleMonthlyCheckIn(hour: hour)
+    }
+
+    private static func scheduleMonthlyCheckIn(hour: Int) async -> Bool {
 
         let content = UNMutableNotificationContent()
         content.title = "Monthly Net Worth Check‑in"

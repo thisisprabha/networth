@@ -12,6 +12,7 @@ struct SettingsView: View {
     @State private var isChoosingRegion = false
     @State private var pendingRegion: SupportedRegion?
     @State private var showRegionChangeConfirmation = false
+    @State private var showReminderPrePrompt = false
 
     var body: some View {
         ZStack {
@@ -111,6 +112,14 @@ struct SettingsView: View {
         } message: {
             Text("This changes formatting only. Existing values will not be converted.")
         }
+        .alert("Enable monthly reminders?", isPresented: $showReminderPrePrompt) {
+            Button("Not now", role: .cancel) {}
+            Button("Continue") {
+                Task { await enableMonthlyReminder() }
+            }
+        } message: {
+            Text("NetWorth can send a check‑in reminder on the 1st of each month. iOS will ask for permission next.")
+        }
         .fileExporter(
             isPresented: $isExporting,
             document: exportDocument,
@@ -161,22 +170,27 @@ struct SettingsView: View {
         Binding(
             get: { store.settings.monthlyReminderEnabled },
             set: { newValue in
-                store.settings.monthlyReminderEnabled = newValue
-                store.save()
                 if newValue {
-                    Task {
-                        let scheduled = await NotificationService.scheduleMonthlyCheckIn()
-                        if !scheduled {
-                            store.settings.monthlyReminderEnabled = false
-                            store.save()
-                            alertMessage = "Notifications are disabled. Enable them in Settings."
-                        }
-                    }
+                    showReminderPrePrompt = true
                 } else {
+                    store.settings.monthlyReminderEnabled = false
+                    store.save()
                     NotificationService.cancelMonthlyCheckIn()
                 }
             }
         )
+    }
+
+    private func enableMonthlyReminder() async {
+        let scheduled = await NotificationService.requestAndScheduleMonthlyCheckIn()
+        if scheduled {
+            store.settings.monthlyReminderEnabled = true
+            store.save()
+        } else {
+            store.settings.monthlyReminderEnabled = false
+            store.save()
+            alertMessage = "Notifications are disabled. Enable them in Settings."
+        }
     }
 
     private func handleImport(_ result: Result<URL, Error>) {

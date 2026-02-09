@@ -44,19 +44,19 @@ struct RootView: View {
                 AppLockView(store: appLockStore)
             }
         }
-        .sheet(
+        .fullScreenCover(
             isPresented: Binding(
-                get: { assetStore.isLoaded && !assetStore.settings.hasCompletedOnboarding },
+                get: { shouldPresentOnboarding },
                 set: { _ in }
             )
         ) {
-            CountryOnboardingView(store: assetStore)
+            GetStartedView(store: assetStore)
         }
         .task {
             assetStore.load()
             appLockStore.isEnabled = assetStore.settings.appLockEnabled
             if assetStore.settings.monthlyReminderEnabled {
-                Task { _ = await NotificationService.scheduleMonthlyCheckIn() }
+                Task { _ = await NotificationService.scheduleMonthlyCheckInIfAuthorized() }
             }
             await appLockStore.unlockIfNeeded()
         }
@@ -70,5 +70,14 @@ struct RootView: View {
                 break
             }
         }
+    }
+
+    private var shouldPresentOnboarding: Bool {
+        guard assetStore.isLoaded else { return false }
+        guard assetStore.settings.hasCompletedOnboarding == false else { return false }
+        if let snoozeUntil = assetStore.settings.onboardingSnoozeUntil {
+            return snoozeUntil <= Date()
+        }
+        return true
     }
 }

@@ -1,0 +1,190 @@
+import SwiftUI
+import UniformTypeIdentifiers
+
+struct GetStartedView: View {
+    let store: AssetStore
+
+    @State private var isAddingAsset = false
+    @State private var isImporting = false
+    @State private var alertMessage: String?
+    @State private var isChoosingRegion = false
+    @State private var showReminderUpsell = false
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: Theme.Spacing.xxLarge) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.small) {
+                    Text("Know your net worth.")
+                        .font(AppFont.font(.largeTitle, weight: .bold))
+                        .foregroundStyle(Theme.primaryText)
+
+                    Text("Update once a month in under a minute.")
+                        .font(AppFont.font(.title3))
+                        .foregroundStyle(Theme.secondaryText)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                VStack(spacing: Theme.Spacing.medium) {
+                    Button {
+                        isAddingAsset = true
+                    } label: {
+                        Text("Add your first asset")
+                            .font(AppFont.font(.headline, weight: .bold))
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Theme.accentAlt)
+
+                    Button {
+                        isImporting = true
+                    } label: {
+                        Text("Import CSV")
+                            .font(AppFont.font(.headline, weight: .semibold))
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(Theme.accentAlt)
+                }
+
+                CardContainer {
+                    Button {
+                        isChoosingRegion = true
+                    } label: {
+                        HStack {
+                            Text("Country & currency")
+                                .font(AppFont.font(.subheadline, weight: .semibold))
+                                .foregroundStyle(Theme.primaryText)
+                            Spacer()
+                            Text(selectedRegion.displayName)
+                                .font(AppFont.font(.subheadline))
+                                .foregroundStyle(Theme.secondaryText)
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    Divider()
+                        .padding(.vertical, Theme.Spacing.small)
+
+                    Text("You can change this anytime in Settings. This only affects formatting — we won’t convert existing numbers.")
+                        .font(AppFont.font(.caption))
+                        .foregroundStyle(Theme.secondaryText)
+                }
+
+                Spacer(minLength: 0)
+
+                HStack(spacing: Theme.Spacing.large) {
+                    Button("Remind me later") {
+                        snoozeOnboarding()
+                    }
+                    .font(AppFont.font(.subheadline, weight: .semibold))
+
+                    Spacer()
+
+                    Button("Skip") {
+                        completeOnboarding()
+                    }
+                    .font(AppFont.font(.subheadline, weight: .semibold))
+                }
+            }
+            .padding(Theme.Spacing.xxxLarge)
+            .navigationBarHidden(true)
+            .sheet(isPresented: $isAddingAsset) {
+                AssetFormView(store: store, asset: nil, initialCategory: .savings)
+            }
+            .sheet(isPresented: $isChoosingRegion) {
+                RegionPickerView(
+                    title: "Country & currency",
+                    subtitle: "Pick the currency you want to use in the app.",
+                    selected: selectedRegion,
+                    showsCancel: true
+                ) { region in
+                    store.setRegion(region, markOnboardingComplete: false)
+                }
+            }
+            .sheet(isPresented: $showReminderUpsell) {
+                MonthlyReminderUpsellView(
+                    store: store,
+                    onFinish: {
+                        showReminderUpsell = false
+                        completeOnboarding()
+                    }
+                )
+            }
+            .fileImporter(
+                isPresented: $isImporting,
+                allowedContentTypes: [.commaSeparatedText]
+            ) { result in
+                handleImport(result)
+            }
+            .alert("Notice", isPresented: Binding(get: { alertMessage != nil }, set: { _ in alertMessage = nil })) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(alertMessage ?? "")
+            }
+            .onChange(of: store.assets.count) { _, newValue in
+                guard newValue > 0 else { return }
+                handleFirstMeaningfulAction()
+            }
+        }
+    }
+
+    private var selectedRegion: SupportedRegion {
+        SupportedRegion.match(currencyCode: store.settings.currencyCode, regionCode: store.settings.regionCode)
+            ?? SupportedRegion.all.first(where: { $0.currencyCode == store.settings.currencyCode })
+            ?? SupportedRegion.all.first!
+    }
+
+    private func handleFirstMeaningfulAction() {
+        guard store.settings.hasCompletedOnboarding == false else { return }
+
+        if store.settings.monthlyReminderEnabled {
+            completeOnboarding()
+            return
+        }
+
+        if store.settings.didShowReminderUpsell {
+            completeOnboarding()
+            return
+        }
+
+        store.settings.didShowReminderUpsell = true
+        store.save()
+        showReminderUpsell = true
+    }
+
+    private func completeOnboarding() {
+        store.settings.hasCompletedOnboarding = true
+        store.settings.onboardingSnoozeUntil = nil
+        store.save()
+    }
+
+    private func snoozeOnboarding() {
+        store.settings.onboardingSnoozeUntil = Calendar.current.date(byAdding: .day, value: 7, to: Date())
+        store.save()
+    }
+
+    private func handleImport(_ result: Result<URL, Error>) {
+        do {
+            let url = try result.get()
+            let isScoped = url.startAccessingSecurityScopedResource()
+            defer {
+                if isScoped {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
+            let data = try Data(contentsOf: url)
+            guard let content = String(data: data, encoding: .utf8) else {
+                alertMessage = "Invalid file."
+                return
+            }
+            let imported = try CSVService.importCSV(content)
+            store.merge(imported)
+            Haptics.success()
+            alertMessage = "Imported \(imported.count) assets."
+        } catch {
+            Haptics.error()
+            alertMessage = "Import failed."
+        }
+    }
+}
+
