@@ -223,7 +223,7 @@ private struct HeroHeaderView: View {
         ZStack {
             Theme.card
             VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
-                Text("Current net worth")
+                Text("My current net worth")
                     .font(AppFont.font(.subheadline, weight: .semibold))
                     .foregroundStyle(Theme.secondaryText)
 
@@ -234,7 +234,7 @@ private struct HeroHeaderView: View {
                 } label: {
                     Group {
                         if isHidden {
-                            Text("***")
+                            Text("****")
                                 .font(Theme.Typography.heroValue)
                                 .foregroundStyle(Theme.primaryText)
                         } else {
