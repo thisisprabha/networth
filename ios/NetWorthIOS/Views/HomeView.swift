@@ -5,6 +5,7 @@ struct HomeView: View {
     let store: AssetStore
     @Binding var tabSelection: RootTab
     @State private var showCards = false
+    @State private var isNetWorthHidden = true
 
     private var currentNetWorth: Double {
         CalculationsService.netWorth(store.assets)
@@ -42,7 +43,8 @@ struct HomeView: View {
                             currentValue: currentNetWorth,
                             projectionValue: projectionValue,
                             percentGrowth: percentGrowth,
-                            lastUpdated: lastUpdated
+                            lastUpdated: lastUpdated,
+                            isHidden: $isNetWorthHidden
                         )
                     }
 
@@ -214,6 +216,7 @@ private struct HeroHeaderView: View {
     let projectionValue: Double
     let percentGrowth: Double
     let lastUpdated: Date?
+    @Binding var isHidden: Bool
     @Environment(\.moneyConfig) private var moneyConfig
 
     var body: some View {
@@ -224,10 +227,26 @@ private struct HeroHeaderView: View {
                     .font(AppFont.font(.subheadline, weight: .semibold))
                     .foregroundStyle(Theme.secondaryText)
 
-                Text(Formatters.formatMoney(currentValue, config: moneyConfig))
-                    .font(Theme.Typography.heroValue)
-                    .foregroundStyle(Theme.primaryText)
-                    .contentTransition(.numericText())
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHidden.toggle()
+                    }
+                } label: {
+                    Group {
+                        if isHidden {
+                            Text("***")
+                                .font(Theme.Typography.heroValue)
+                                .foregroundStyle(Theme.primaryText)
+                        } else {
+                            Text(Formatters.formatMoney(currentValue, config: moneyConfig))
+                                .font(Theme.Typography.heroValue)
+                                .foregroundStyle(Theme.primaryText)
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
 
                 if let lastUpdated {
                     Text("Updated \(lastUpdated, style: .date)")
@@ -238,7 +257,7 @@ private struct HeroHeaderView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Theme.Spacing.xxLarge)
         }
-        .frame(height: Theme.Size.heroHeight)
+        .frame(minHeight: Theme.Size.heroMinHeight)
         .clipShape(.rect(cornerRadius: Theme.Radius.hero))
         .shadow(
             color: Theme.Elevation.heroShadowColor,

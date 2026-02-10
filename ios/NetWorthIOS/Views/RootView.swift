@@ -14,20 +14,29 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $tabSelection) {
-            Tab("Overview", systemImage: "chart.pie", value: .overview) {
+            Tab(value: .overview) {
                 NavigationStack {
                     HomeView(store: assetStore, tabSelection: $tabSelection)
                 }
+            } label: {
+                Label("Overview", systemImage: "chart.pie")
+                    .symbolEffect(.bounce, value: tabSelection == .overview)
             }
 
-            Tab("Assets", systemImage: "tray.full", value: .assets) {
+            Tab(value: .assets) {
                 AssetsListView(store: assetStore)
+            } label: {
+                Label("Assets", systemImage: "tray.full")
+                    .symbolEffect(.bounce, value: tabSelection == .assets)
             }
 
-            Tab("Settings", systemImage: "gearshape", value: .settings) {
+            Tab(value: .settings) {
                 NavigationStack {
                     SettingsView(store: assetStore, appLockStore: appLockStore)
                 }
+            } label: {
+                Label("Settings", systemImage: "gearshape")
+                    .symbolEffect(.bounce, value: tabSelection == .settings)
             }
         }
         .background(Theme.background)

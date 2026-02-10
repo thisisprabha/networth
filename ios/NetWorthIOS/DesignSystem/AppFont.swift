@@ -5,8 +5,8 @@ import UIKit
 #endif
 
 enum AppFont {
-    static let regularName = "iAWriterQuattroS-Regular"
-    static let boldName = "iAWriterQuattroS-Bold"
+    static let regularName = "Montserrat-Regular"
+    static let boldName = "Montserrat-SemiBold"
 
     static func font(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
         let name = fontName(for: weight)

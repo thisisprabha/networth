@@ -153,8 +153,12 @@ struct AssetsListView: View {
                 }
             } header: {
                 Text("Wealth")
+                    .font(AppFont.font(.headline, weight: .bold))
+                    .foregroundStyle(Theme.primaryText)
             } footer: {
                 Text("Assets that add to your net worth.")
+                    .font(AppFont.font(.footnote))
+                    .foregroundStyle(Theme.secondaryText)
             }
         }
     }
@@ -176,8 +180,12 @@ struct AssetsListView: View {
                 }
             } header: {
                 Text("Liabilities")
+                    .font(AppFont.font(.headline, weight: .bold))
+                    .foregroundStyle(Theme.primaryText)
             } footer: {
                 Text("Debts that reduce your net worth.")
+                    .font(AppFont.font(.footnote))
+                    .foregroundStyle(Theme.secondaryText)
             }
         }
     }
@@ -199,8 +207,12 @@ struct AssetsListView: View {
                 }
             } header: {
                 Text("Protection")
+                    .font(AppFont.font(.headline, weight: .bold))
+                    .foregroundStyle(Theme.primaryText)
             } footer: {
                 Text("Coverage only, not included in net worth.")
+                    .font(AppFont.font(.footnote))
+                    .foregroundStyle(Theme.secondaryText)
             }
         }
     }

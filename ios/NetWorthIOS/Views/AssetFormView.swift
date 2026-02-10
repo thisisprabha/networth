@@ -8,6 +8,34 @@ struct AssetFormView: View {
     @State private var draft: AssetDraft
     @State private var selectedCategory: AssetCategory
     private let isEditing: Bool
+    private let wealthCategories: Set<AssetCategory> = [
+        .stocks,
+        .mutualFunds,
+        .gold,
+        .silver,
+        .fixedDeposits,
+        .bonds,
+        .land,
+        .home,
+        .savings,
+        .emergencySavings,
+        .esop,
+        .privateEquity,
+        .vpfPpf,
+        .personalAssets
+    ]
+    private let liabilityCategories: Set<AssetCategory> = [
+        .homeLoan,
+        .carLoan,
+        .personalLoan,
+        .creditCard,
+        .otherDebt
+    ]
+    private let protectionCategories: Set<AssetCategory> = [
+        .lifeInsurance,
+        .healthInsurance,
+        .vehicleInsurance
+    ]
 
     init(store: AssetStore, asset: Asset?, initialCategory: AssetCategory? = nil) {
         self.store = store
@@ -30,15 +58,23 @@ struct AssetFormView: View {
             Form {
                 Section {
                     Picker("Category", selection: $selectedCategory) {
-                        ForEach(AssetCategoryDefinition.ordered, id: \.self) { category in
-                            Text(category.definition.name).tag(category)
+                        ForEach(categoryGroups, id: \.title) { group in
+                            Section(group.title) {
+                                ForEach(group.categories, id: \.self) { category in
+                                    Text(category.definition.name).tag(category)
+                                }
+                            }
                         }
                     }
                     .disabled(isEditing)
                 } header: {
                     Text("Category")
+                        .font(AppFont.font(.subheadline, weight: .bold))
+                        .foregroundStyle(Theme.primaryText)
                 } footer: {
                     Text(isEditing ? "Category can’t be changed after saving." : "Choose the category that best describes this asset.")
+                        .font(AppFont.font(.footnote))
+                        .foregroundStyle(Theme.secondaryText)
                 }
 
                 Section {
@@ -47,16 +83,24 @@ struct AssetFormView: View {
                     }
                 } header: {
                     Text("Details")
+                        .font(AppFont.font(.subheadline, weight: .bold))
+                        .foregroundStyle(Theme.primaryText)
                 } footer: {
                     Text("Values are stored in \(Formatters.currencyDisplay(config: moneyConfig)).")
+                        .font(AppFont.font(.footnote))
+                        .foregroundStyle(Theme.secondaryText)
                 }
 
                 Section {
                     growthRateField
                 } header: {
                     Text("Projection")
+                        .font(AppFont.font(.subheadline, weight: .bold))
+                        .foregroundStyle(Theme.primaryText)
                 } footer: {
                     Text("Used only for the 1‑year projection.")
+                        .font(AppFont.font(.footnote))
+                        .foregroundStyle(Theme.secondaryText)
                 }
             }
             .navigationTitle(isEditing ? "Edit Asset" : "Add Asset")
@@ -145,6 +189,15 @@ struct AssetFormView: View {
             get: { store.growthRate(for: selectedCategory) },
             set: { store.setGrowthRate($0, for: selectedCategory) }
         )
+    }
+
+    private var categoryGroups: [(title: String, categories: [AssetCategory])] {
+        let ordered = AssetCategoryDefinition.ordered
+        return [
+            ("Wealth", ordered.filter { wealthCategories.contains($0) }),
+            ("Liabilities", ordered.filter { liabilityCategories.contains($0) }),
+            ("Protection", ordered.filter { protectionCategories.contains($0) })
+        ]
     }
 
     private func numberBinding(for field: AssetFieldDefinition) -> Binding<Double> {

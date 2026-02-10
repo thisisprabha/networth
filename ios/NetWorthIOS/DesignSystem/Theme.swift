@@ -33,7 +33,7 @@ enum Theme {
 
     enum Size {
         static let icon: CGFloat = 36
-        static let heroHeight: CGFloat = 200
+        static let heroMinHeight: CGFloat = 160
         static let chartSmall: CGFloat = 110
         static let chartMedium: CGFloat = 120
         static let appLockCardMaxWidth: CGFloat = 320
@@ -65,8 +65,8 @@ enum Theme {
 
     static let background = Color.white
     static let card = Color.white
-    static let accent = Color(red: 0.98, green: 0.77, blue: 0.22)
-    static let accentAlt = Color(red: 0.98, green: 0.58, blue: 0.24)
+    static let accent = Color(red: 0.32, green: 0.63, blue: 0.97)
+    static let accentAlt = Color(red: 0.17, green: 0.47, blue: 0.92)
     static let primaryText = Color(.label)
     static let secondaryText = Color(.secondaryLabel)
     static let divider = Color(.separator)
