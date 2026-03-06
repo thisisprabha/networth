@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 
 enum RootTab: Hashable {
@@ -11,6 +12,7 @@ struct RootView: View {
     @State private var appLockStore = AppLockStore()
     @State private var tabSelection: RootTab = .overview
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         TabView(selection: $tabSelection) {
@@ -69,6 +71,9 @@ struct RootView: View {
             }
             await appLockStore.unlockIfNeeded()
         }
+        .task(id: reviewPromptTrigger) {
+            requestAppReviewIfNeeded()
+        }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .active:
@@ -88,5 +93,29 @@ struct RootView: View {
             return snoozeUntil <= Date()
         }
         return true
+    }
+
+    private var shouldRequestReviewPrompt: Bool {
+        guard assetStore.isLoaded else { return false }
+        guard !shouldPresentOnboarding else { return false }
+        guard assetStore.assets.count >= 10 else { return false }
+        guard assetStore.settings.didRequestReviewPrompt == false else { return false }
+        return true
+    }
+
+    private var reviewPromptTrigger: String {
+        [
+            String(assetStore.isLoaded),
+            String(assetStore.assets.count),
+            String(shouldPresentOnboarding),
+            String(assetStore.settings.didRequestReviewPrompt)
+        ].joined(separator: ":")
+    }
+
+    private func requestAppReviewIfNeeded() {
+        guard shouldRequestReviewPrompt else { return }
+        assetStore.settings.didRequestReviewPrompt = true
+        assetStore.save()
+        requestReview()
     }
 }

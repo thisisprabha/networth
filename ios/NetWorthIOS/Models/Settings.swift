@@ -6,6 +6,10 @@ struct Settings: Codable, Hashable {
     var hasCompletedOnboarding: Bool
     var onboardingSnoozeUntil: Date?
     var didShowReminderUpsell: Bool
+    var didRequestReviewPrompt: Bool
+    var feedbackSubmitted: Bool
+    var feedbackRating: Int?
+    var feedbackSnoozeUntil: Date?
     var growthRates: [String: Double]
     var appLockEnabled: Bool
     var monthlyReminderEnabled: Bool
@@ -16,6 +20,10 @@ struct Settings: Codable, Hashable {
         case hasCompletedOnboarding
         case onboardingSnoozeUntil
         case didShowReminderUpsell
+        case didRequestReviewPrompt
+        case feedbackSubmitted
+        case feedbackRating
+        case feedbackSnoozeUntil
         case growthRates
         case appLockEnabled
         case monthlyReminderEnabled
@@ -27,6 +35,10 @@ struct Settings: Codable, Hashable {
         hasCompletedOnboarding: Bool,
         onboardingSnoozeUntil: Date?,
         didShowReminderUpsell: Bool,
+        didRequestReviewPrompt: Bool,
+        feedbackSubmitted: Bool,
+        feedbackRating: Int?,
+        feedbackSnoozeUntil: Date?,
         growthRates: [String: Double],
         appLockEnabled: Bool,
         monthlyReminderEnabled: Bool
@@ -36,6 +48,10 @@ struct Settings: Codable, Hashable {
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.onboardingSnoozeUntil = onboardingSnoozeUntil
         self.didShowReminderUpsell = didShowReminderUpsell
+        self.didRequestReviewPrompt = didRequestReviewPrompt
+        self.feedbackSubmitted = feedbackSubmitted
+        self.feedbackRating = feedbackRating
+        self.feedbackSnoozeUntil = feedbackSnoozeUntil
         self.growthRates = growthRates
         self.appLockEnabled = appLockEnabled
         self.monthlyReminderEnabled = monthlyReminderEnabled
@@ -52,6 +68,11 @@ struct Settings: Codable, Hashable {
         self.hasCompletedOnboarding = try container.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? true
         self.onboardingSnoozeUntil = try container.decodeIfPresent(Date.self, forKey: .onboardingSnoozeUntil)
         self.didShowReminderUpsell = try container.decodeIfPresent(Bool.self, forKey: .didShowReminderUpsell) ?? true
+        let legacyFeedbackSubmitted = try container.decodeIfPresent(Bool.self, forKey: .feedbackSubmitted) ?? false
+        self.didRequestReviewPrompt = try container.decodeIfPresent(Bool.self, forKey: .didRequestReviewPrompt) ?? legacyFeedbackSubmitted
+        self.feedbackSubmitted = legacyFeedbackSubmitted
+        self.feedbackRating = try container.decodeIfPresent(Int.self, forKey: .feedbackRating)
+        self.feedbackSnoozeUntil = try container.decodeIfPresent(Date.self, forKey: .feedbackSnoozeUntil)
 
         var rates: [String: Double] = [:]
         for category in AssetCategory.allCases {
@@ -78,6 +99,10 @@ struct Settings: Codable, Hashable {
             hasCompletedOnboarding: false,
             onboardingSnoozeUntil: nil,
             didShowReminderUpsell: false,
+            didRequestReviewPrompt: false,
+            feedbackSubmitted: false,
+            feedbackRating: nil,
+            feedbackSnoozeUntil: nil,
             growthRates: rates,
             appLockEnabled: true,
             monthlyReminderEnabled: false
