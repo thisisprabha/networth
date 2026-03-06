@@ -9,6 +9,7 @@ struct GetStartedView: View {
     @State private var alertMessage: String?
     @State private var isChoosingRegion = false
     @State private var showReminderUpsell = false
+    @State private var shouldCompleteOnboardingAfterAlert = false
 
     var body: some View {
         NavigationStack {
@@ -81,7 +82,7 @@ struct GetStartedView: View {
             }
             .padding(Theme.Spacing.xxxLarge)
             .navigationBarHidden(true)
-            .sheet(isPresented: $isAddingAsset) {
+            .sheet(isPresented: $isAddingAsset, onDismiss: handleAddedAssetDismissed) {
                 AssetFormView(store: store, asset: nil, initialCategory: .savings)
             }
             .sheet(isPresented: $isChoosingRegion) {
@@ -94,7 +95,7 @@ struct GetStartedView: View {
                     store.setRegion(region, markOnboardingComplete: false)
                 }
             }
-            .sheet(isPresented: $showReminderUpsell) {
+            .sheet(isPresented: $showReminderUpsell, onDismiss: handleReminderUpsellDismissed) {
                 MonthlyReminderUpsellView(
                     store: store,
                     onFinish: {
@@ -110,13 +111,14 @@ struct GetStartedView: View {
                 handleImport(result)
             }
             .alert("Notice", isPresented: Binding(get: { alertMessage != nil }, set: { _ in alertMessage = nil })) {
-                Button("OK", role: .cancel) {}
+                Button("OK", role: .cancel) {
+                    if shouldCompleteOnboardingAfterAlert {
+                        shouldCompleteOnboardingAfterAlert = false
+                        completeOnboarding()
+                    }
+                }
             } message: {
                 Text(alertMessage ?? "")
-            }
-            .onChange(of: store.assets.count) { _, newValue in
-                guard newValue > 0 else { return }
-                handleFirstMeaningfulAction()
             }
         }
     }
@@ -146,6 +148,7 @@ struct GetStartedView: View {
     }
 
     private func completeOnboarding() {
+        showReminderUpsell = false
         store.settings.hasCompletedOnboarding = true
         store.settings.onboardingSnoozeUntil = nil
         store.save()
@@ -166,17 +169,39 @@ struct GetStartedView: View {
                 }
             }
             let data = try Data(contentsOf: url)
-            guard let content = String(data: data, encoding: .utf8) else {
-                alertMessage = "Invalid file."
+            let imported = try CSVService.importCSV(data: data)
+            guard !imported.isEmpty else {
+                Haptics.error()
+                shouldCompleteOnboardingAfterAlert = false
+                alertMessage = "No assets found in this CSV."
                 return
             }
-            let imported = try CSVService.importCSV(content)
+            let existingCount = store.assets.count
             store.merge(imported)
+            let newCount = max(0, store.assets.count - existingCount)
             Haptics.success()
-            alertMessage = "Imported \(imported.count) assets."
+            shouldCompleteOnboardingAfterAlert = store.assets.isEmpty == false
+            if newCount > 0 {
+                alertMessage = "Imported \(imported.count) assets (\(newCount) new)."
+            } else {
+                alertMessage = "Import complete. Synced \(imported.count) assets."
+            }
         } catch {
             Haptics.error()
+            shouldCompleteOnboardingAfterAlert = false
             alertMessage = "Import failed."
         }
+    }
+
+    private func handleAddedAssetDismissed() {
+        guard store.assets.isEmpty == false else { return }
+        handleFirstMeaningfulAction()
+    }
+
+    private func handleReminderUpsellDismissed() {
+        guard showReminderUpsell == false else { return }
+        guard store.assets.isEmpty == false else { return }
+        guard store.settings.hasCompletedOnboarding == false else { return }
+        completeOnboarding()
     }
 }
