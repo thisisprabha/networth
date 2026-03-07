@@ -203,14 +203,21 @@ struct SettingsView: View {
                 }
             }
             let data = try Data(contentsOf: url)
-            guard let content = String(data: data, encoding: .utf8) else {
-                alertMessage = "Invalid file."
+            let imported = try CSVService.importCSV(data: data)
+            guard !imported.isEmpty else {
+                Haptics.error()
+                alertMessage = "No assets found in this CSV."
                 return
             }
-            let imported = try CSVService.importCSV(content)
+            let existingCount = store.assets.count
             store.merge(imported)
+            let newCount = max(0, store.assets.count - existingCount)
             Haptics.success()
-            alertMessage = "Imported \(imported.count) assets."
+            if newCount > 0 {
+                alertMessage = "Imported \(imported.count) assets (\(newCount) new)."
+            } else {
+                alertMessage = "Import complete. Synced \(imported.count) assets."
+            }
         } catch {
             Haptics.error()
             alertMessage = "Import failed."

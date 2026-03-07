@@ -1,6 +1,11 @@
 import Foundation
 
 enum CSVService {
+    enum ImportError: Error {
+        case invalidEncoding
+        case invalidHeader
+    }
+
     static let headers = [
         "id",
         "category",
@@ -34,24 +39,31 @@ enum CSVService {
         return rows.joined(separator: "\n")
     }
 
+    static func importCSV(data: Data) throws -> [Asset] {
+        let content = try decodeContent(from: data)
+        return try importCSV(content)
+    }
+
     static func importCSV(_ content: String) throws -> [Asset] {
         let lines = content.split(whereSeparator: \.isNewline).map(String.init)
         guard let headerLine = lines.first else { return [] }
-        let headerFields = parseCSVLine(headerLine)
-        guard headerFields == headers else { return [] }
+        let headerFields = parseCSVLine(headerLine).map(normalizeHeaderField)
+        let columnIndex = Dictionary(uniqueKeysWithValues: headerFields.enumerated().map { ($0.element, $0.offset) })
+        let requiredColumns = ["id", "category", "name", "values", "createdAt", "updatedAt"]
+        guard requiredColumns.allSatisfy({ columnIndex[$0] != nil }) else {
+            throw ImportError.invalidHeader
+        }
 
         var assets: [Asset] = []
 
         for line in lines.dropFirst() {
             let fields = parseCSVLine(line)
-            if fields.count < headers.count { continue }
-
-            let id = fields[0]
-            let categoryRaw = fields[1]
-            let name = fields[2]
-            let valuesString = fields[5]
-            let createdAt = parseDate(fields[6]) ?? Date()
-            let updatedAt = parseDate(fields[7]) ?? Date()
+            let id = value(for: "id", in: fields, columnIndex: columnIndex)
+            let categoryRaw = value(for: "category", in: fields, columnIndex: columnIndex)
+            let name = value(for: "name", in: fields, columnIndex: columnIndex)
+            let valuesString = value(for: "values", in: fields, columnIndex: columnIndex)
+            let createdAt = parseDate(value(for: "createdAt", in: fields, columnIndex: columnIndex)) ?? Date()
+            let updatedAt = parseDate(value(for: "updatedAt", in: fields, columnIndex: columnIndex)) ?? Date()
 
             guard let category = AssetCategory(rawValue: categoryRaw) else { continue }
             let values = parseValues(valuesString)
@@ -68,6 +80,23 @@ enum CSVService {
         }
 
         return assets
+    }
+
+    private static func decodeContent(from data: Data) throws -> String {
+        let encodings: [String.Encoding] = [
+            .utf8,
+            .utf16,
+            .utf16LittleEndian,
+            .utf16BigEndian,
+            .unicode,
+            .ascii
+        ]
+        for encoding in encodings {
+            if let value = String(data: data, encoding: encoding) {
+                return value
+            }
+        }
+        throw ImportError.invalidEncoding
     }
 
     private static func jsonString(from values: [String: FieldValue]) throws -> String {
@@ -154,5 +183,16 @@ enum CSVService {
         let needsQuotes = value.contains(",") || value.contains("\"") || value.contains("\n")
         let escaped = value.replacingOccurrences(of: "\"", with: "\"\"")
         return needsQuotes ? "\"\(escaped)\"" : escaped
+    }
+
+    private static func normalizeHeaderField(_ value: String) -> String {
+        value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\u{feff}", with: "")
+    }
+
+    private static func value(for key: String, in fields: [String], columnIndex: [String: Int]) -> String {
+        guard let index = columnIndex[key], index < fields.count else { return "" }
+        return fields[index]
     }
 }
